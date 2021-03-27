@@ -48,17 +48,37 @@ public class LowestCost {
         results.next();
         boolean[] parts = new boolean[4];
         fill(results, parts);
+        ArrayList<String> newCombination = new ArrayList<>();
+        newCombination.add(results.getString("ID"));
+
         while(results.next()) {
             if(containsAllTrue(parts)) {
-
+                
             }
             boolean[] tempParts = new boolean[4];
             fill(results, tempParts);
-            addArrays(parts, tempParts);
+            if (checkNewPart(parts,tempParts))
+            {
+                addArrays(parts, tempParts);
+                newCombination.add(results.getString("ID"));
+            }    
+            
         }
 
     }
 
+    private boolean checkNewPart(boolean[] parts, boolean[] tempParts)
+    {
+        for (int i = 0; i < parts.length; i++)
+        {
+            if (parts[i] == false && tempParts[i] == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
     private static void fill(ResultSet results, boolean[] parts) throws SQLException{
         for(int i = 3; i < 7; i++) {
             if (results.getString(i).equals("Y")) {
