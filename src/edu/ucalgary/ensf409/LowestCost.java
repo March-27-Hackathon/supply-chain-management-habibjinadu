@@ -43,15 +43,45 @@ public class LowestCost {
     }
 
     public int calculateChairPrice(ResultSet results) throws SQLException {
-        return 0;
+        ArrayList<ArrayList<String>> combinations = new ArrayList<>();
+        ResultSet original = results;
+        results.next();
+        boolean[] parts = new boolean[4];
+        fill(results, parts);
+        while(results.next()) {
+            if(containsAllTrue(parts)) {
+
+            }
+            boolean[] tempParts = new boolean[4];
+            fill(results, tempParts);
+            addArrays(parts, tempParts);
+        }
+
     }
 
-    private void checkFilled(ResultSet results, boolean[] parts) throws SQLException{
+    private static void fill(ResultSet results, boolean[] parts) throws SQLException{
         for(int i = 3; i < 7; i++) {
             if (results.getString(i).equals("Y")) {
                 parts[i-3] = true;
             }
         }
+    }
+
+    private static void addArrays(boolean[] a, boolean[] b) {
+        for(int i = 0; i < a.length; i++) {
+            if(!a[i]) {
+                a[i] = b[i];
+            }
+        }
+    }
+
+    private static boolean containsAllTrue(boolean[] src) {
+        for(int i = 0; i < src.length; i++) {
+            if(!src[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int calculateDeskPrice(ResultSet results) {
