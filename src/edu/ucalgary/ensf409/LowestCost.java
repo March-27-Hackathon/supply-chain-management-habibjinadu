@@ -8,6 +8,7 @@ import java.sql.*;
  */
 public class LowestCost {
     private Connection dbConnect;
+    private String furnitureCategory;
     private String furnitureType;
     private int numberOfItems;
 
@@ -16,5 +17,36 @@ public class LowestCost {
         this.furnitureType = fType;
         this.numberOfItems = numItems;
     }
-    
+
+    public void findBestCombination() {
+        try {
+            Statement stmt = dbConnect.createStatement();
+            ResultSet results = stmt.executeQuery("SELECT * FROM " +
+                    furnitureCategory + " WHERE Type = '" + furnitureType +
+                    "'");
+            //do stuff
+            stmt.close();
+            results.close();
+        } catch (SQLException e) {
+            System.err.println("An SQLException occurred while selecting from "
+                    + furnitureCategory + " with the Type " + furnitureType);
+        }
+    }
+
+    public int calculateChairPrice(ResultSet results) {
+        //temp return value
+        return 0;
+    }
+
+    public int calculateDeskPrice(ResultSet results) {
+        return 0;
+    }
+
+    public int calculateFilingPrice(ResultSet results) {
+        return 0;
+    }
+
+    public int calculateLampPrice(ResultSet results) {
+        return 0;
+    }
 }
