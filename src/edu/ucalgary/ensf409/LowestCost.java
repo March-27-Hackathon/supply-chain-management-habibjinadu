@@ -48,22 +48,27 @@ public class LowestCost {
         results.next();
         boolean[] parts = new boolean[4];
         fill(results, parts);
+        int index = 0;
+        int savedIndex = 0;
         ArrayList<String> newCombination = new ArrayList<>();
         newCombination.add(results.getString("ID"));
 
         while(results.next()) {
             if(containsAllTrue(parts)) {
-                
+                break;
             }
             boolean[] tempParts = new boolean[4];
             fill(results, tempParts);
-            if (checkNewPart(parts,tempParts))
-            {
+            if (checkNewPart(parts,tempParts)) {
                 addArrays(parts, tempParts);
                 newCombination.add(results.getString("ID"));
+                if(savedIndex != 0) {
+                    savedIndex = index;
+                }
             }    
-            
+            index++;
         }
+        combinations.add(newCombination);
 
     }
 
