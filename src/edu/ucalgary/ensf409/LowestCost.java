@@ -24,24 +24,16 @@ public class LowestCost {
 
     public void findBestCombination() {
         try {
-            Statement stmt = dbConnect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+            
+            Statement stmt = dbConnect.createStatement(
+                                            ResultSet.TYPE_SCROLL_INSENSITIVE,
                                                     ResultSet.CONCUR_UPDATABLE);
             ResultSet results = stmt.executeQuery("SELECT * FROM " +
                     furnitureCategory + " WHERE Type = '" + furnitureType +
                     "'");
 
             createItemTable(results);
-            for (boolean[] boolArray: this.itemTable)
-            {
-                for (boolean bool: boolArray)
-                {
-                    System.out.print(bool);
-                    System.out.print("            ");
-
-                }
-
-                System.out.println();
-            }
+            
 
             //The following just prints the query results to the screen, for testing purposes
             while(results.next()) {
@@ -57,31 +49,54 @@ public class LowestCost {
         }
     }
 
+    /**
+     * printTableItem prints the 
+     */
+    private void printTableItem()
+    {
+        // for each row in the 2D array
+        for (boolean[] boolArray: this.itemTable) 
+            {
+                for (boolean bool: boolArray)   // for each boolean
+                {
+                    System.out.print(bool); // print the boolean value
+                    System.out.print("            "); // print a large space
+
+                }
+
+                System.out.println(); // print a new line
+            }
+    }
     private void createItemTable (ResultSet results) throws SQLException
     {
+        // get the number of rows.
         int numberOfRows = getNumberOfRows(results);
+        // get the number of parts
         int numberOfParts = getNumberOfParts(results);
+        // instantiate the 2D item table array
         this.itemTable = new boolean [numberOfRows][numberOfParts];
         
+        // interate through the itemTable
         for (int i = 0; i < this.itemTable.length; i++)
         {
-            results.next();
-            fill(results, this.itemTable[i]);
-
+            results.next(); // navigate to the next result
+            fill(results, this.itemTable[i]); // fill each row with true if
+                                            // the item is Y, false if the item
+                                            // N
         }
 
-        results.beforeFirst();
+        results.beforeFirst(); // set the results cursor back to row 0
 
     }
 
     private int getNumberOfRows(ResultSet results)
     {
-        int lastRow = -1;
+        int lastRow = -1; // default value for the last row
         try
         {
-            results.last();
-            lastRow = results.getRow();
-            results.absolute(0);
+            results.last(); // nagivate to the last row of the table
+            lastRow = results.getRow(); // get the row number in the last row
+            results.absolute(0); // return the cursor to row 0
             
         }
         catch (SQLException e)
@@ -89,14 +104,15 @@ public class LowestCost {
             System.err.println("Could not move the cursor In the ResultSet");
             e.printStackTrace();
         }
-        return lastRow;
+        return lastRow; // return the index of the last row
     }
 
     private int getNumberOfParts (ResultSet results)
     {
-        int numberOfParts = -1;
+        int numberOfParts = -1; // default value if the last row is not foound
         try
         {
+            // find the number of parts for the table
             numberOfParts = results.findColumn("Price") - 3;
         }
         catch (SQLException e)
@@ -104,7 +120,7 @@ public class LowestCost {
             System.err.println("Could not find the column named 'Price'");
             e.printStackTrace();
         }
-        return numberOfParts;
+        return numberOfParts; // return the number of parts for the table
     }
     public int calculateChairPrice(ResultSet results) throws SQLException {
         ArrayList<ArrayList<String>> combinations = new ArrayList<>();
@@ -149,8 +165,9 @@ public class LowestCost {
 
         return false;
     }
-    private static void fill(ResultSet results, boolean[] parts) throws SQLException{
-        for(int i = 3; i < 7; i++) {
+    private void fill(ResultSet results, boolean[] parts) throws SQLException{
+        int numberOfParts = getNumberOfParts(results);
+        for(int i = 3; i < numberOfParts ; i++) {
             if (results.getString(i).equals("Y")) {
                 parts[i-3] = true;
             }
