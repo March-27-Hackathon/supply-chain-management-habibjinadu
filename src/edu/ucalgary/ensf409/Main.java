@@ -94,14 +94,14 @@ public class Main {
         System.out.println("Test");
 
         // Habib's Test Code
-        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
+        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","carter","3nsf409*");
 
         database.initializeConnection(); // initialize the connection
 
         Connection databaseConnection = database.getDatabaseConnection();
 
         //Carter's test code
-        LowestCost calculation = new LowestCost(databaseConnection, "Chair", "Ergonomic", 3);
+        LowestCost calculation = new LowestCost(databaseConnection, category, type, quantity);
         calculation.findBestCombination();
     }
 }

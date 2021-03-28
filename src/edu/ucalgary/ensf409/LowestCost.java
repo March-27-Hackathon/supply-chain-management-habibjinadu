@@ -36,16 +36,18 @@ public class LowestCost {
             
 
             //The following just prints the query results to the screen, for testing purposes
-            while(results.next()) {
+        /*    while(results.next()) {
                 System.out.println(results.getString("ID")+" "+results.getString("Type")+" "+results.getString("Legs")+" "+results.getString("Arms")+" "+results.getString("Seat")+" "+
                         results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
-            }
+            } */
 
+            System.out.println("Calculated desk lamp price: " + lampPrice(results, itemTable, 1));
             stmt.close();
             results.close();
         } catch (SQLException e) {
             System.err.println("An SQLException occurred while selecting from "
                     + furnitureCategory + " with the Type " + furnitureType);
+            e.printStackTrace();
         }
     }
 
@@ -67,6 +69,7 @@ public class LowestCost {
                 System.out.println(); // print a new line
             }
     }
+
     private void createItemTable (ResultSet results) throws SQLException
     {
         // get the number of rows.
@@ -209,7 +212,10 @@ public class LowestCost {
         return 0;
     }
 
-    public int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
+    private int lampPrice (ResultSet results, boolean[][] parts, int currentRow) throws SQLException{
+        return calculateLampPrice(results, parts[0], parts, currentRow);
+    }
+    private int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
         //base case is when parts.length == 1 AND parts[0] doesn't satisfy the requirements
         //also currentRow should start at 1, eg, when calling the function, currentRow should be 1
 
