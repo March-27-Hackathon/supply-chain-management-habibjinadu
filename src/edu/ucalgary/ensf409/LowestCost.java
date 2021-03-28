@@ -41,7 +41,7 @@ public class LowestCost {
                         results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
             } */
 
-            System.out.println("Calculated desk lamp price: " + lampPrice(results, itemTable, 1));
+            System.out.println("Calculated desk lamp price: " + lampPrice(results, itemTable));
             stmt.close();
             results.close();
         } catch (SQLException e) {
@@ -212,12 +212,11 @@ public class LowestCost {
         return 0;
     }
 
-    private int lampPrice (ResultSet results, boolean[][] parts, int currentRow) throws SQLException{
-        return calculateLampPrice(results, parts[0], parts, currentRow);
+    private int lampPrice(ResultSet results, boolean[][] parts) throws SQLException{
+        return calculateLampPrice(results, parts[0], parts, 1);
     }
     private int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
         //base case is when parts.length == 1 AND parts[0] doesn't satisfy the requirements
-        //also currentRow should start at 1, eg, when calling the function, currentRow should be 1
 
         addArrays(foundParts, parts[0]);
         if(!containsAllTrue(foundParts)) {
