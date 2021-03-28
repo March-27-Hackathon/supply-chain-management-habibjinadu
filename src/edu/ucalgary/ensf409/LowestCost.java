@@ -36,16 +36,18 @@ public class LowestCost {
             
 
             //The following just prints the query results to the screen, for testing purposes
-            while(results.next()) {
+        /*    while(results.next()) {
                 System.out.println(results.getString("ID")+" "+results.getString("Type")+" "+results.getString("Legs")+" "+results.getString("Arms")+" "+results.getString("Seat")+" "+
                         results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
-            }
+            } */
 
+            System.out.println("Calculated desk lamp price: " + lampPrice(results, itemTable));
             stmt.close();
             results.close();
         } catch (SQLException e) {
             System.err.println("An SQLException occurred while selecting from "
                     + furnitureCategory + " with the Type " + furnitureType);
+            e.printStackTrace();
         }
     }
 
@@ -67,6 +69,7 @@ public class LowestCost {
                 System.out.println(); // print a new line
             }
     }
+
     private void createItemTable (ResultSet results) throws SQLException
     {
         // get the number of rows.
@@ -122,6 +125,16 @@ public class LowestCost {
         }
         return numberOfParts; // return the number of parts for the table
     }
+
+    private int getRowPrice(ResultSet results, int rowIndex) throws SQLException{
+        //rowIndex starts at 1
+        int savedRow = results.getRow();
+        results.absolute(rowIndex);
+        int result = results.getInt("Price");
+        results.absolute(savedRow);
+        return result;
+    }
+
     public int calculateChairPrice(ResultSet results) throws SQLException {
         ArrayList<ArrayList<String>> combinations = new ArrayList<>();
         ResultSet original = results;
@@ -199,7 +212,36 @@ public class LowestCost {
         return 0;
     }
 
-    public int calculateLampPrice(ResultSet results) {
-        return 0;
+    private int lampPrice(ResultSet results, boolean[][] parts) throws SQLException{
+        return calculateLampPrice(results, parts[0], parts, 1);
+    }
+    private int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
+        if(containsAllTrue(foundParts)) {
+            return getRowPrice(results, currentRow);
+            //combination found
+        }
+        if(parts.length == 1) {
+            if(checkNewPart(foundParts, parts[0])) {
+                addArrays(foundParts, parts[0]);
+                if(containsAllTrue(foundParts)) {
+                    return getRowPrice(results, currentRow);
+                    //success!
+                } else {
+                    return -1;
+                    //failure
+                }
+            } else {
+                return -1;
+                //failure
+            }
+        }
+        //if there are new parts to be added, the price should include the current row
+        if(checkNewPart(foundParts, parts[0])) {
+            addArrays(foundParts, parts[0]);
+            return getRowPrice(results, currentRow) + calculateLampPrice(results, foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+        }
+        //otherwise it should not include the current row
+        return calculateLampPrice(results, foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
     }
 }
+
