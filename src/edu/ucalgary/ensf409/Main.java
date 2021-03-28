@@ -4,7 +4,7 @@ import javax.swing.JOptionPane;
 
 
 public class Main {
-    private final static String HEADER_EXT = " - Faculty Franken-furniture Finder";
+    private final static String HEADER_EXT = " - Faculty FrankenFurniture Finder";
     private final static String[] CHAIR_TYPES = {"Ergonomic", "Executive", "Kneeling", "Mesh", "Task"};
     private final static String[] DESK_TYPES = {"Adjustable", "Standing", "Traditional"};
     private final static String[] FILING_TYPES = {"Small", "Medium", "Large"};
