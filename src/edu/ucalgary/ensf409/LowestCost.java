@@ -216,18 +216,32 @@ public class LowestCost {
         return calculateLampPrice(results, parts[0], parts, 1);
     }
     private int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
-        //base case is when parts.length == 1 AND parts[0] doesn't satisfy the requirements
-
-        addArrays(foundParts, parts[0]);
-        if(!containsAllTrue(foundParts)) {
-            if(parts.length == 1) {
-                return -1; //no combination found
+        if(containsAllTrue(foundParts)) {
+            return getRowPrice(results, currentRow);
+            //combination found
+        }
+        if(parts.length == 1) {
+            if(checkNewPart(foundParts, parts[0])) {
+                addArrays(foundParts, parts[0]);
+                if(containsAllTrue(foundParts)) {
+                    return getRowPrice(results, currentRow);
+                    //success!
+                } else {
+                    return -1;
+                    //failure
+                }
             } else {
-                return getRowPrice(results, currentRow) +
-                        calculateLampPrice(results, foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+                return -1;
+                //failure
             }
         }
-
-        return getRowPrice(results, currentRow);
+        //if there are new parts to be added, the price should include the current row
+        if(checkNewPart(foundParts, parts[0])) {
+            addArrays(foundParts, parts[0]);
+            return getRowPrice(results, currentRow) + calculateLampPrice(results, foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+        }
+        //otherwise it should not include the current row
+        return calculateLampPrice(results, foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
     }
 }
+
