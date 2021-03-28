@@ -1,6 +1,7 @@
 package edu.ucalgary.ensf409;
 
 import java.sql.*;
+import java.util.*;
 
 /**
  * Uses a connection to a database to calculate the lowest cost of creating a furniture item, given the desired furniture
@@ -11,9 +12,11 @@ public class LowestCost {
     private String furnitureCategory;
     private String furnitureType;
     private int numberOfItems;
+    private int finalPrice;
 
-    public LowestCost(Connection dbConnect, String fType, int numItems) {
+    public LowestCost(Connection dbConnect, String category, String fType, int numItems) {
         this.dbConnect = dbConnect;
+        this.furnitureCategory = category;
         this.furnitureType = fType;
         this.numberOfItems = numItems;
     }
@@ -24,7 +27,13 @@ public class LowestCost {
             ResultSet results = stmt.executeQuery("SELECT * FROM " +
                     furnitureCategory + " WHERE Type = '" + furnitureType +
                     "'");
-            //do stuff
+
+            //The following just prints the query results to the screen, for testing purposes
+            while(results.next()) {
+                System.out.println(results.getString("ID")+" "+results.getString("Type")+" "+results.getString("Legs")+" "+results.getString("Arms")+" "+results.getString("Seat")+" "+
+                        results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
+            }
+
             stmt.close();
             results.close();
         } catch (SQLException e) {
@@ -33,9 +42,71 @@ public class LowestCost {
         }
     }
 
-    public int calculateChairPrice(ResultSet results) {
-        //temp return value
-        return 0;
+    public int calculateChairPrice(ResultSet results) throws SQLException {
+        ArrayList<ArrayList<String>> combinations = new ArrayList<>();
+        ResultSet original = results;
+        results.next();
+        boolean[] parts = new boolean[4];
+        fill(results, parts);
+        int index = 0;
+        int savedIndex = 0;
+        ArrayList<String> newCombination = new ArrayList<>();
+        newCombination.add(results.getString("ID"));
+
+        while(results.next()) {
+            if(containsAllTrue(parts)) {
+                break;
+            }
+            boolean[] tempParts = new boolean[4];
+            fill(results, tempParts);
+            if (checkNewPart(parts,tempParts)) {
+                addArrays(parts, tempParts);
+                newCombination.add(results.getString("ID"));
+                if(savedIndex != 0) {
+                    savedIndex = index;
+                }
+            }    
+            index++;
+        }
+        combinations.add(newCombination);
+
+    }
+
+    private boolean checkNewPart(boolean[] parts, boolean[] tempParts)
+    {
+        for (int i = 0; i < parts.length; i++)
+        {
+            if (parts[i] == false && tempParts[i] == true)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    private static void fill(ResultSet results, boolean[] parts) throws SQLException{
+        for(int i = 3; i < 7; i++) {
+            if (results.getString(i).equals("Y")) {
+                parts[i-3] = true;
+            }
+        }
+    }
+
+    private static void addArrays(boolean[] a, boolean[] b) {
+        for(int i = 0; i < a.length; i++) {
+            if(!a[i]) {
+                a[i] = b[i];
+            }
+        }
+    }
+
+    private static boolean containsAllTrue(boolean[] src) {
+        for(int i = 0; i < src.length; i++) {
+            if(!src[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int calculateDeskPrice(ResultSet results) {
