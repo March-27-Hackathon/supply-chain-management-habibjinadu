@@ -106,6 +106,16 @@ public class LowestCost {
         }
         return numberOfParts;
     }
+
+    private int getRowPrice(ResultSet results, int rowIndex) throws SQLException{
+        //rowIndex starts at 1
+        int savedRow = results.getRow();
+        results.absolute(rowIndex);
+        int result = results.getInt("Price");
+        results.absolute(savedRow);
+        return result;
+    }
+
     public int calculateChairPrice(ResultSet results) throws SQLException {
         ArrayList<ArrayList<String>> combinations = new ArrayList<>();
         ResultSet original = results;
@@ -182,7 +192,20 @@ public class LowestCost {
         return 0;
     }
 
-    public int calculateLampPrice(ResultSet results) {
-        return 0;
+    public int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
+        //base case is when parts.length == 1 AND parts[0] doesn't satisfy the requirements
+        //also currentRow should start at 1, eg, when calling the function, currentRow should be 1
+
+        addArrays(foundParts, parts[0]);
+        if(!containsAllTrue(foundParts)) {
+            if(parts.length == 1) {
+                return -1; //no combination found
+            } else {
+                return getRowPrice(results, currentRow) +
+                        calculateLampPrice(results, foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+            }
+        }
+
+        return getRowPrice(results, currentRow);
     }
 }
