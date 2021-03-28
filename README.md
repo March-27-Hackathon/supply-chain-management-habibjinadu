@@ -8,7 +8,7 @@ The program calculates the lowest cost option to build a desired type of furnitu
 We built our application using the Java programming language and its standard libraries. The program also queries and alters the inventory database, which is stored in a MySQL file. 
 
 ## Challenges we ran into
-The algorithm to determine all the possible combinations of furniture pieces to fulfill an order has been challenging. This is in-part because the lowest cost option out of all possible options has to be considered. 
+The algorithm to determine all the possible combinations of furniture pieces to fulfill an order has been challenging. This is, in part, because the lowest cost option out of all possible options has to be considered. 
 
 ## Accomplishments that we're proud of
 We are proud of the order request interface. The command-line interface ensures that we properly receive order requests that are complete and valid.
