@@ -13,7 +13,7 @@ public class OrderForm {
 			FileWriter fileWriter = new FileWriter(fileName, false);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 			bufferedWriter.write("Furniture Order Form\n\nFaculty Name:\nContact:\nDate:\n\nOriginal Request: ");
-            bufferedWriter.write(type + " " + category + ", " + String.valueOf(quantity));
+            bufferedWriter.write(type.toLowerCase() + " " + category.toLowerCase() + ", " + String.valueOf(quantity));
             bufferedWriter.write("\n\nItems Ordered\n");
             for (int i = 0; i < itemsOrdered.length; i++) {
                 bufferedWriter.write("ID: " + itemsOrdered[i] + "\n");
