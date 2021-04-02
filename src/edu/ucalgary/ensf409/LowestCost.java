@@ -32,7 +32,7 @@ public class LowestCost {
                     furnitureCategory + " WHERE Type = '" + furnitureType +
                     "'");
 
-            createItemTable(results);
+            createItemTable(results); // creates the item table
 
             //The following just prints the query results to the screen, for testing purposes
         /*    while(results.next()) {
