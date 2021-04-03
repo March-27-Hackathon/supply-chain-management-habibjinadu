@@ -51,7 +51,8 @@ public class LowestCost {
     }
 
     /**
-     * printTableItem prints the 
+     * printTableItem prints the table which shows the working and broken parts
+     * for each furniture item in the itemTable
      */
     private void printTableItem()
     {
@@ -69,6 +70,17 @@ public class LowestCost {
             }
     }
 
+    /**
+     * createItemTable creates a 2D boolean array that is populated with 
+     * the working and broken parts for each furniture item in the ResultSet
+     * for example if a furniture item in the Result set has a Y Y N for it's 
+     * parts. The corresponding row in the itemTable will contain 
+     * true true false 
+     * @param results table that contains the funiture items and status of its
+     * working parts
+     * @throws SQLException if the database cannot be accessed, an SQL exception
+     * is thrown
+     */
     private void createItemTable (ResultSet results) throws SQLException
     {
         // get the number of rows.
