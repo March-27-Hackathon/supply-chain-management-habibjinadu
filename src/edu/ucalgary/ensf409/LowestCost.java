@@ -22,7 +22,15 @@ public class LowestCost {
         this.numberOfItems = numItems;
     }
 
-    public void findBestCombination() {
+    /**
+     * This method will use the database connection, the furniture category and type, and the number of items to be
+     * ordered to determine the most cost-efficient combination of furniture items to use from the database. Once it
+     * does, it will update the database to remove the furniture items it's using, and will also create and return a
+     * FurnitureOrder object consisting of all of the relevant data for the order.
+     * @return The FurnitureOrder object, which contains all data relevant to the furniture order.
+     */
+    public FurnitureOrder findBestCombination() {
+        FurnitureOrder order = new FurnitureOrder(furnitureCategory, furnitureType, numberOfItems);
         try {
             
             Statement stmt = dbConnect.createStatement(
@@ -35,19 +43,27 @@ public class LowestCost {
             createItemTable(results); // creates the item table
 
             //The following just prints the query results to the screen, for testing purposes
-        /*    while(results.next()) {
+        /*  while(results.next()) {
                 System.out.println(results.getString("ID")+" "+results.getString("Type")+" "+results.getString("Legs")+" "+results.getString("Arms")+" "+results.getString("Seat")+" "+
                         results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
             } */
 
-            System.out.println("Calculated desk lamp price: " + lampPrice(results, itemTable));
-            stmt.close();
-            results.close();
+            switch (furnitureCategory) {
+                case "Chair":
+                    finalPrice = calculateChairPrice(results);
+                case "Desk":
+                    finalPrice = calculateDeskPrice(results);
+                case "Filing":
+                    finalPrice = calculateFilingPrice(results);
+                case "Lamp":
+                    finalPrice = lampPrice(results);
+            }
         } catch (SQLException e) {
             System.err.println("An SQLException occurred while selecting from "
                     + furnitureCategory + " with the Type " + furnitureType);
             e.printStackTrace();
         }
+        return order;
     }
 
     /**
@@ -223,8 +239,8 @@ public class LowestCost {
         return 0;
     }
 
-    private int lampPrice(ResultSet results, boolean[][] parts) throws SQLException{
-        return calculateLampPrice(results, parts[0], parts, 1);
+    private int lampPrice(ResultSet results) throws SQLException{
+        return calculateLampPrice(results, itemTable[0], itemTable, 1);
     }
     private int calculateLampPrice(ResultSet results, boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
         if(containsAllTrue(foundParts)) {

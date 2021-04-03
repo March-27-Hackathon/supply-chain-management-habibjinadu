@@ -139,8 +139,6 @@ public class Main {
         // System.out.println("Type: " + type);
         // System.out.println("Quantity: " + String.valueOf(quantity));
 
-        System.out.println("Test");
-
         // Habib's Test Code
         FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
 
@@ -150,6 +148,9 @@ public class Main {
 
         //Carter's test code
         LowestCost calculation = new LowestCost(databaseConnection, category, type, quantity);
-        calculation.findBestCombination();
+        FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
+        //order with all of the relevant information
+
+        //The order form should be created and used here, using orderResult to get all the needed information
     }
 }
