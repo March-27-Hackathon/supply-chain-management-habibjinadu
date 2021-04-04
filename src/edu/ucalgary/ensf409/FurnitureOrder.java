@@ -23,6 +23,7 @@ public class FurnitureOrder {
         CATEGORY = category;
         TYPE = type;
         NUMITEMS = numItems;
+        fulfilled = false;
     }
 
     public LinkedList<String> getFurnitureIDList() {

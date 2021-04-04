@@ -140,7 +140,7 @@ public class Main {
         // System.out.println("Quantity: " + String.valueOf(quantity));
 
         // Habib's Test Code
-        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
+        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","carter","3nsf409*");
 
         database.initializeConnection(); // initialize the connection
 
