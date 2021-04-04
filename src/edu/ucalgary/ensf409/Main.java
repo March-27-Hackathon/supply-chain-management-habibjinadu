@@ -147,6 +147,7 @@ public class Main {
         database.initializeConnection(); // initialize the connection
 
         Connection databaseConnection = database.getDatabaseConnection();
+        BestOrder exampleBestOrder = new BestOrder();
 
         //Carter's test code
         LowestCost calculation = new LowestCost(databaseConnection, category, type, quantity);
