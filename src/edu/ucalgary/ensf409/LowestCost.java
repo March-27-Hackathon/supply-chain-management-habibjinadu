@@ -3,6 +3,7 @@ package edu.ucalgary.ensf409;
 import java.sql.*;
 import java.util.*;
 
+
 /**
  * Uses a connection to a database to calculate the lowest cost of creating a furniture item, given the desired furniture
  * item and its type.
@@ -73,8 +74,14 @@ public class LowestCost {
             if (!(furnitureOrderList.size() == 0))
             {
                 order.setFulfilled(); // set the fulfilled flag to true
+            }else
+            {
+                order.setManufacturerIDList(
+                            generateManufacturerNames(this.furnitureCategory));
+                System.out.println(order.getManufacturerIDList().toString());
             }
 
+            
             
 
             
@@ -85,6 +92,102 @@ public class LowestCost {
             e.printStackTrace();
         }
         return order;
+    }
+
+    /**
+     * Make list string creates a formatted string using a list of ids.
+     * The formatted string is in the form ('id1', 'id2', ...)
+     * @return
+     */
+    private String makeListString(LinkedList<String> ids)
+    {
+        // create the string builder
+        StringBuilder formattedString = new StringBuilder();
+        formattedString.append("("); // append the opening bracket
+        
+        for (String id: ids)
+        {
+            formattedString.append("'"); // append an apostrophe
+            formattedString.append(id); // append the id in the string
+            formattedString.append("'"); // append the closing apostrophe
+            formattedString.append(","); // append the comma
+        }
+
+        // delete the last comma
+        formattedString.deleteCharAt(formattedString.length()-1);
+        formattedString.append(")"); // append the closing bracket
+
+        return formattedString.toString(); // return the formatted string
+    }
+    /**
+     * generateManufactureNames returns a list of the manufacturer names for
+     * from the Manufacturer table 
+     * @param category
+     * @return
+     */
+    private LinkedList<String> generateManufacturerNames(String category)
+    {
+        // get the manufacturer ids from the category table
+        LinkedList<String> manufacturerIds = 
+                                  generateManufacturerIDList(category);
+        
+        // make the linked list that will store the manufacturer names
+        LinkedList<String> manufacturerNames = new LinkedList<String>();
+        // make the list of IDs
+        String listOfIds = makeListString(manufacturerIds);
+        // make the queryString
+        String query = "SELECT * FROM manufacturer WHERE ManuID IN " + listOfIds;
+        // make the statement and the query database
+        try (Statement queryStatement = this.dbConnect.createStatement();
+            ResultSet queryResult = queryStatement.executeQuery(query))
+        {
+            while (queryResult.next()) // while there are still rows
+            {
+                // add the name of the maufacturer
+                manufacturerNames.add(queryResult.getString("Name"));
+            }
+        }
+        catch (SQLException e)
+        {
+            // print a message
+            System.out.println("Could not query the manufacturer database");
+            e.printStackTrace(); // print stack trace
+        }
+
+        return manufacturerNames; // return the manufacturer names
+    }
+
+    /**
+     * generateManufacturerIDList returns a list of the different manufacturer
+     * Ids for the specific category
+     * @param category
+     * @return
+     */
+    private LinkedList<String> generateManufacturerIDList(String category)
+    {
+        LinkedList<String> manufacturerIds = new LinkedList<String>();
+        // make the query string to retrieve the Manufacturer IDs from the 
+        // table specified by Category
+        String query = "SELECT DISTINCT ManuID FROM " + category;
+        // make a statement and query the database
+        try(Statement queryStatement = this.dbConnect.createStatement();
+            ResultSet queryResult = queryStatement.executeQuery(query))
+        {
+            // while there are still rows left in the result
+            while(queryResult.next()) 
+            {
+                // add the manufacturer ids to the linkedlist
+                manufacturerIds.add(queryResult.getString("ManuID"));
+            }
+        }
+        catch (SQLException e)
+        {
+            // print a message
+            System.out.println("Could not query the database");
+            e.printStackTrace(); // print stack trace
+        }
+
+        return manufacturerIds; // return the manufacturer Ids
     }
 
     /**
