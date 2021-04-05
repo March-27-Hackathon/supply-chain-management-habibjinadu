@@ -34,7 +34,7 @@ public class Main {
         Connection databaseConnection = database.getDatabaseConnection();
 
         //Carter's test code
-        LowestCost calculation = new LowestCost(databaseConnection, category, type, quantity);
+        LowestCost calculation = new LowestCost(databaseConnection, main.category, main.type, main.quantity);
         FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
         //order with all of the relevant information
         System.out.println("Client has ordered " + orderResult.getNUMITEMS() + " " + orderResult.getTYPE() + " " + orderResult.getCATEGORY());
