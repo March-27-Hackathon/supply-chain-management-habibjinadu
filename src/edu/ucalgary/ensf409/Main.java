@@ -2,9 +2,7 @@ package edu.ucalgary.ensf409;
 import java.sql.*;
 import java.util.Arrays;
 import java.util.LinkedList;
-
-import javax.swing.JOptionPane;
-
+import javax.swing.*;
 
 public class Main {
     private final static String HEADER_EXT = " - Faculty FrankenFurniture Finder";
@@ -15,6 +13,8 @@ public class Main {
     private String category = null;
     private String type = null;
     private int quantity = Integer.MIN_VALUE;
+    private final static ImageIcon icon = new ImageIcon("frankenchair.png");
+
     public static void main(String[] args) {
         Main main = new Main(); // instantiates Main object
         boolean gui = false;
@@ -51,44 +51,44 @@ public class Main {
             // commandLineOutput(manufacturerList);
         }
 
-        // Habib's Test Code
-        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
+        // // Habib's Test Code
+        // FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
 
-        database.initializeConnection(); // initialize the connection
+        // database.initializeConnection(); // initialize the connection
 
-        Connection databaseConnection = database.getDatabaseConnection();
+        // Connection databaseConnection = database.getDatabaseConnection();
 
-        //Carter's test code
-        LowestCost calculation = new LowestCost(databaseConnection, main.category, main.type, main.quantity);
-        FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
-        //order with all of the relevant information
-        System.out.println("Client has ordered " + orderResult.getNUMITEMS() + " " + orderResult.getTYPE() + " " + orderResult.getCATEGORY());
-        System.out.println("Furniture to be ordered: " + orderResult.getFurnitureIDList().toString());
-        System.out.println("Total order price: " + orderResult.getPrice());
-        if (!orderResult.isFulfilled())
-        {
-            System.out.println("Alternative Manufacturers are: " + orderResult.getManufacturerIDList().toString());
-        }
+        // //Carter's test code
+        // LowestCost calculation = new LowestCost(databaseConnection, main.category, main.type, main.quantity);
+        // FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
+        // //order with all of the relevant information
+        // System.out.println("Client has ordered " + orderResult.getNUMITEMS() + " " + orderResult.getTYPE() + " " + orderResult.getCATEGORY());
+        // System.out.println("Furniture to be ordered: " + orderResult.getFurnitureIDList().toString());
+        // System.out.println("Total order price: " + orderResult.getPrice());
+        // if (!orderResult.isFulfilled())
+        // {
+        //     System.out.println("Alternative Manufacturers are: " + orderResult.getManufacturerIDList().toString());
+        // }
 
-        //The order form should be created and used here, using orderResult to get all the needed information
+        // //The order form should be created and used here, using orderResult to get all the needed information
     }
 
     // JOptionPane Interface
     public void graphicalUserInterfaceInput() {
         try {
             String[] categories = {"Chair", "Desk", "Filing", "Lamp"};
-            this.category = (String)JOptionPane.showInputDialog(null, "I am looking for (a)...", "Category" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, categories, categories[0]);
+            this.category = (String)JOptionPane.showInputDialog(null, "I am looking for (a)...", "Category" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, categories, categories[0]);
             if (this.category.equals("Chair")) {
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of chair", "Type (Chair)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, CHAIR_TYPES, CHAIR_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of chair", "Type (Chair)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, CHAIR_TYPES, CHAIR_TYPES[0]);
             }
             else if (this.category.equals("Desk")) {
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of desk", "Type (Desk)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, DESK_TYPES, DESK_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of desk", "Type (Desk)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, DESK_TYPES, DESK_TYPES[0]);
             }
             else if (this.category.equals("Filing")) {
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of filing", "Type (FilingO" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, FILING_TYPES, FILING_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of filing", "Type (FilingO" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, FILING_TYPES, FILING_TYPES[0]);
             }
             else {
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of lamp", "Type (Lamp)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, LAMP_TYPES, LAMP_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of lamp", "Type (Lamp)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, LAMP_TYPES, LAMP_TYPES[0]);
             }
         }
         catch (NullPointerException e) {
@@ -99,7 +99,7 @@ public class Main {
         }
         String quantityString = "Input";
         while (this.quantity < 1) {
-            quantityString = (String)JOptionPane.showInputDialog(null, "How many would you like?", "Quantity" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, null, "1");
+            quantityString = (String)JOptionPane.showInputDialog(null, "How many would you like?", "Quantity" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, null, "1");
             if (quantityString == null) {
                 System.exit(1);
             }
@@ -108,14 +108,14 @@ public class Main {
             }
             catch (NumberFormatException e){
                 if (quantityString.length() == 0) {
-                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, icon);
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, icon);
                 }
             }
             if (quantity == 0) {
-                JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, icon);
             }
         }
     }
@@ -135,7 +135,7 @@ public class Main {
             }
             message = message + "and "  + furnitureIDList.get(furnitureIDList.size() - 1) + " for $" + price + ".";
         }
-        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon);
     }
     public static void graphicalUserInterfaceOutput(LinkedList<String> manufacturerList) {
         String message = "";
