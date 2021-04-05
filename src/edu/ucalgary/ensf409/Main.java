@@ -1,5 +1,8 @@
 package edu.ucalgary.ensf409;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import javax.swing.JOptionPane;
 
 
@@ -14,17 +17,39 @@ public class Main {
     private int quantity = Integer.MIN_VALUE;
     public static void main(String[] args) {
         Main main = new Main(); // instantiates Main object
+        boolean gui = false;
 
         if (args.length < 3) {
-            main.graphicalUserInterface(); // either launches GUI
+            gui = true;
+            main.graphicalUserInterfaceInput(); // either launches GUI
         }
         else {
-            main.commandLineArgumentHandling(args); // or accepts command line arguments
+            main.commandLineInput(args); // or accepts command line arguments
         }
 
         // System.out.println("Category: " + main.category);
         // System.out.println("Type: " + main.type);
         // System.out.println("Quantity: " + String.valueOf(main.quantity));
+
+        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890"));
+        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890", "C0942"));
+        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890", "C0942", "C0XXX"));
+        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890", "C0942", "C0XXX", "C0XXX"));
+        // int price = 150;
+
+        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings"));
+        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings", "Chairs R Us"));
+        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings", "Chairs R Us", "Furniture Goods"));
+        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings", "Chairs R Us", "Furniture Goods", "Fine Office Supplies"));
+
+        if (gui) {
+            // graphicalUserInterfaceOutput(furnitureIDList, price);
+            // graphicalUserInterfaceOutput(manufacturerList);
+        }
+        else {
+            // commandLineOutput(furnitureIDList, price);
+            // commandLineOutput(manufacturerList);
+        }
 
         // Habib's Test Code
         FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
@@ -34,7 +59,7 @@ public class Main {
         Connection databaseConnection = database.getDatabaseConnection();
 
         //Carter's test code
-        LowestCost calculation = new LowestCost(databaseConnection, category, type, quantity);
+        LowestCost calculation = new LowestCost(databaseConnection, main.category, main.type, main.quantity);
         FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
         //order with all of the relevant information
 
@@ -42,7 +67,7 @@ public class Main {
     }
 
     // JOptionPane Interface
-    public void graphicalUserInterface() {
+    public void graphicalUserInterfaceInput() {
         try {
             String[] categories = {"Chair", "Desk", "Filing", "Lamp"};
             this.category = (String)JOptionPane.showInputDialog(null, "I am looking for (a)...", "Category" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, categories, categories[0]);
@@ -67,7 +92,7 @@ public class Main {
         }
         String quantityString = "Input";
         while (this.quantity < 1) {
-            quantityString = (String)JOptionPane.showInputDialog(null, "How many would you like?", "Quantity" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+            quantityString = (String)JOptionPane.showInputDialog(null, "How many would you like?", "Quantity" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, null, null, "1");
             if (quantityString == null) {
                 System.exit(1);
             }
@@ -75,7 +100,12 @@ public class Main {
                 this.quantity = Integer.parseUnsignedInt(quantityString);
             }
             catch (NumberFormatException e){
-                JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+                if (quantityString.length() == 0) {
+                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+                }
+                else {
+                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+                }
             }
             if (quantity == 0) {
                 JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
@@ -83,8 +113,44 @@ public class Main {
         }
     }
 
+    public static void graphicalUserInterfaceOutput(LinkedList<String> furnitureIDList, int price) {
+        String message = "";
+        message = message + "Purchase ";
+        if (furnitureIDList.size() == 1) {
+            message = message + furnitureIDList.get(0) + " for $" + price + ".";
+        }
+        else if (furnitureIDList.size() == 2) {
+            message = message + furnitureIDList.get(0) + " and "  + furnitureIDList.get(1) + " for $" + price + ".";
+        }
+        else if (furnitureIDList.size() > 2) {
+            for (int i = 0; i < furnitureIDList.size() - 1; i++) {
+                message = message + furnitureIDList.get(i) + ", ";
+            }
+            message = message + "and "  + furnitureIDList.get(furnitureIDList.size() - 1) + " for $" + price + ".";
+        }
+        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE);
+    }
+    public static void graphicalUserInterfaceOutput(LinkedList<String> manufacturerList) {
+        String message = "";
+        message = message + "Order cannot be fulfilled based on current inventory. Suggested manufacturer";
+        if (manufacturerList.size() == 1) {
+            message = message + " is " + manufacturerList.get(0) + ".";
+        }
+        else if (manufacturerList.size() == 2) {
+            message = message + "s are " + manufacturerList.get(0) + " and "  + manufacturerList.get(1) + ".";
+        }
+        else if (manufacturerList.size() > 2) {
+            message = message + "s are ";
+            for (int i = 0; i < manufacturerList.size() - 1; i++) {
+                message = message + manufacturerList.get(i) + ", ";
+            }
+            message = message + "and " + manufacturerList.get(manufacturerList.size() - 1) + ".";
+        }
+        JOptionPane.showMessageDialog(null, message, "Item(s) Not Found" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+    }
+
     // Command Line Interface
-    public void commandLineArgumentHandling(String args[]) {
+    public void commandLineInput(String args[]) {
         category = args[0].substring(0, 1).toUpperCase() + args[0].substring(1).toLowerCase();
         type = args[1].substring(0, 1).toUpperCase();
         boolean upperCaseNext = false;
@@ -160,6 +226,38 @@ public class Main {
         }
         if (quantity == 0) {
             System.out.println("At least one item must be requested. Please try again.");
+        }
+    }
+
+    public static void commandLineOutput(LinkedList<String> furnitureIDList, int price) {
+        System.out.print("Purchase ");
+        if (furnitureIDList.size() == 1) {
+            System.out.println(furnitureIDList.get(0) + " for $" + price + ".");
+        }
+        else if (furnitureIDList.size() == 2) {
+            System.out.println(furnitureIDList.get(0) + " and "  + furnitureIDList.get(1) + " for $" + price + ".");
+        }
+        else if (furnitureIDList.size() > 2) {
+            for (int i = 0; i < furnitureIDList.size() - 1; i++) {
+                System.out.print(furnitureIDList.get(i) + ", ");
+            }
+            System.out.println("and "  + furnitureIDList.get(furnitureIDList.size() - 1) + " for $" + price + ".");
+        }
+    }
+    public static void commandLineOutput(LinkedList<String> manufacturerList) {
+        System.out.print("Order cannot be fulfilled based on current inventory. Suggested manufacturer");
+        if (manufacturerList.size() == 1) {
+            System.out.println(" is " + manufacturerList.get(0) + ".");
+        }
+        else if (manufacturerList.size() == 2) {
+            System.out.println("s are " + manufacturerList.get(0) + " and "  + manufacturerList.get(1) + ".");
+        }
+        else if (manufacturerList.size() > 2) {
+            System.out.print("s are ");
+            for (int i = 0; i < manufacturerList.size() - 1; i++) {
+                System.out.print(manufacturerList.get(i) + ", ");
+            }
+            System.out.println("and "  + manufacturerList.get(manufacturerList.size() - 1) + ".");
         }
     }
 }
