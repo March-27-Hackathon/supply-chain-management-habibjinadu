@@ -50,13 +50,10 @@ public class LowestCost {
                         results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
             } */
 
-            printTableItem();
+            //printTableItem();
 
             ArrayList<Integer> furnitureOrderList = makeOrderList();
-            if (furnitureOrderList.size() == 0)
-            {
-                System.out.println("Sorry, we cannot make your order");
-            }
+
             
             LinkedList<String> furnitureIds = new LinkedList<>();
 
@@ -68,17 +65,17 @@ public class LowestCost {
             }
             // set the price of the order
             order.setPrice(calculatePrice(furnitureOrderList)); 
-            System.out.println("Total order price: " + order.getPrice());
-            System.out.println("Furniture to be ordered: " + order.getFurnitureIDList().toString());
             // if there are orders in the funiture order list
             if (!(furnitureOrderList.size() == 0))
             {
                 order.setFulfilled(); // set the fulfilled flag to true
             }else
             {
+                // else get the list of manufacturers that can provide this type
+                // and store it in the order variable.
                 order.setManufacturerIDList(
                             generateManufacturerNames(this.furnitureCategory));
-                System.out.println(order.getManufacturerIDList().toString());
+                
             }
 
             

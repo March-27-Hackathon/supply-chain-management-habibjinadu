@@ -150,6 +150,13 @@ public class Main {
         LowestCost calculation = new LowestCost(databaseConnection, category, type, quantity);
         FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
         //order with all of the relevant information
+        System.out.println("Client has ordered " + orderResult.getNUMITEMS() + " " + orderResult.getTYPE() + " " + orderResult.getCATEGORY());
+        System.out.println("Furniture to be ordered: " + orderResult.getFurnitureIDList().toString());
+        System.out.println("Total order price: " + orderResult.getPrice());
+        if (!orderResult.isFulfilled())
+        {
+            System.out.println("Alternative Manufacturers are: " + orderResult.getManufacturerIDList().toString());
+        }
 
         //The order form should be created and used here, using orderResult to get all the needed information
     }
