@@ -50,27 +50,35 @@ public class LowestCost {
             } */
 
             printTableItem();
-            ArrayList<ArrayList<Integer>> potentialCombos = filterCombos(generateAllCombos());
-            ArrayList<Integer> lowestCombo = null;
-            finalPrice = calculatePrice(potentialCombos.get(0));
-            for (ArrayList<Integer> potentialCombo : potentialCombos) {
-                int tempPrice = calculatePrice(potentialCombo);
-                System.out.println(tempPrice);
-                if (tempPrice <= finalPrice) {
-                    lowestCombo = potentialCombo;
-                    finalPrice = tempPrice;
-                }
+
+            ArrayList<Integer> furnitureOrderList = makeOrderList();
+            if (furnitureOrderList.size() == 0)
+            {
+                System.out.println("Sorry, we cannot make your order");
             }
-            if(lowestCombo != null) {
-                System.out.println("FINAL PRICE: " + finalPrice);
-                System.out.println("ROWS USED:");
-                for (int row : lowestCombo) {
-                    System.out.println(row + 1); //starts at 1
-                }
-            } else {
-                System.out.println("No combinations exist");
+            
+            LinkedList<String> furnitureIds = new LinkedList<>();
+
+            // for each row in the furniture orderList
+            for (Integer row: furnitureOrderList)
+            {
+                // add the order ID to the furnitureOrder
+                order.addID(getRowId(row.intValue()+1));
+            }
+            // set the price of the order
+            order.setPrice(calculatePrice(furnitureOrderList)); 
+            System.out.println("Total order price: " + order.getPrice());
+            System.out.println("Furniture to be ordered: " + order.getFurnitureIDList().toString());
+            // if there are orders in the funiture order list
+            if (!(furnitureOrderList.size() == 0))
+            {
+                order.setFulfilled(); // set the fulfilled flag to true
             }
 
+            
+
+            
+            
         } catch (SQLException e) {
             System.err.println("An SQLException occurred while selecting from "
                     + furnitureCategory + " with the Type " + furnitureType);
@@ -79,6 +87,205 @@ public class LowestCost {
         return order;
     }
 
+    /**
+     * make orderList returns an integer array list containing the lowest cost
+     * furniture combinations for the client order
+     * @return
+     */
+    private ArrayList<Integer> makeOrderList() throws SQLException
+    {
+        // make an integer array to hold the row numbers of lowest cost order
+        ArrayList<Integer> furnitureOrderList = new ArrayList<Integer>();
+        for (int items = 0; items < this.numberOfItems; items++)
+        {
+            // find the lowest cost furniture one item in the client order
+            // and assign it to lowestCombo
+            ArrayList<Integer> lowestCombo = findLowestCost();
+            // if the lowestCombo array list is empty
+            if (lowestCombo.size() == 0)
+            {
+                return new ArrayList<Integer>(0); // return an empty arrayList
+            }
+            // add the row numbers from the lowestCombo to the furniture
+            // order list
+            furnitureOrderList.addAll(lowestCombo);
+            
+            // recreate the item table
+            createItemTable();
+            // find the unused parts in the current furniture order list
+            // if more parts will be found
+            ArrayList<Integer> unusedParts = 
+                                        findUnusedParts(furnitureOrderList,
+                                        items+1);
+
+           
+            // remove the furnitures in the current order as viable items in
+            // the item table
+            deactivateFurnitureInInventory(furnitureOrderList);
+            
+            // remove the columns in the item table that contain parts we 
+            // already have
+            trimItemTable(unusedParts);
+
+        }
+        return furnitureOrderList; // return the order list
+    }
+    /**
+     * trimItemTable trims the columns that already we already have extra parts
+     * for in the current order
+     * @param unusedParts
+     */
+    private void trimItemTable (ArrayList<Integer> unusedParts)
+    {
+        // create a new array list to hold the column numbers that have extra 
+        // parts
+        ArrayList<Integer> columnNumbers = new ArrayList<Integer>();
+
+        // for each element in the unusedParts List
+        for (int i = 0; i < unusedParts.size(); i++)
+        {
+            // if the column at least 1 extra part
+            if (unusedParts.get(i).intValue() > 0)
+            {
+                // add that column to the columnNumbers array
+                columnNumbers.add(Integer.valueOf(i));
+            }
+        }
+
+        // remove the unnecessary columns in the itemTable data member
+        removeTrueColumns(columnNumbers); 
+    }
+    
+    /**
+     * removeTrueColumns removes the columns in the item table that already
+     * have extra parts
+     * @param columnNumbers
+     */
+    private void removeTrueColumns(ArrayList<Integer> columnNumbers)
+    {
+        
+        boolean[][] newItemTable = new boolean[this.itemTable.length]
+                            [this.itemTable[0].length - columnNumbers.size()];
+        for (int i = 0; i < newItemTable.length; i++)
+        {
+            for (int j = 0, k = 0; j < this.itemTable[0].length; j++)
+            {
+                // if the current column is not part of the true columns
+                if (!columnNumbers.contains(Integer.valueOf(j)))
+                {
+                    // copy the j+offset column entry of this.itemTable
+                    // to the j column entry of newItemTable
+                    newItemTable[i][k] = this.itemTable[i][j];
+                    k++;
+                }
+
+            }
+
+        }
+        // set the itemTable data member to the newItemTable
+        this.itemTable = newItemTable; 
+    }
+
+    /**
+     * deactivateFurnitureInventory modifies the itemTable data member by 
+     * setting all the parts that are currently used for an order to false in
+     * the orderList
+     * @param orderList
+     */
+    private void deactivateFurnitureInInventory (ArrayList<Integer> orderList)
+    {
+        // for each row in the itemTable
+        for (int row = 0; row < this.itemTable.length; row++)
+        {
+            // if this row number is current in the order list
+            if (orderList.contains(Integer.valueOf(row)))
+            {
+                // fill this row with false
+                Arrays.fill(this.itemTable[row], false);
+            }
+        }
+    }
+    /**
+     * findUnusedParts looks for any parts extra parts in the furniture order 
+     * list
+     * @param furnitureOrderList
+     * @return
+     */
+    private ArrayList<Integer>findUnusedParts(
+                                        ArrayList<Integer> furnitureOrderList,
+                                        int numberOfItems)
+    {
+        // instantiate the array list that will hold the amount of unused parts
+        // in each column
+        ArrayList<Integer> unusedParts =  
+                            new ArrayList<Integer>(this.itemTable[0].length);
+
+        // for each column in the itemTable
+        for (int column = 0; column < this.itemTable[0].length; column++)
+        {
+             // set the initial value in the column to zero
+            unusedParts.add(0);
+
+            // for each row in the itemTable
+            for (int row = 0; row < this.itemTable.length; row++)
+            {
+                
+                if (this.itemTable[row][column] == true && 
+                furnitureOrderList.contains(Integer.valueOf(row)))
+                {
+                    // get the currentAmount of parts in this column
+                    int currentAmount = unusedParts.get(column);
+
+                    
+                    // increment the currentAmount in this column by 1
+                    unusedParts.set(column, currentAmount + 1);
+                }
+            }
+            // get the final amount of parts in the column
+            int finalAmount = unusedParts.get(column);
+            // subtract the final amount in the column by the number of
+            // furniture that is currently needed
+            unusedParts.set(column, finalAmount - numberOfItems);
+        }
+
+        return unusedParts;
+    }
+    /**
+     * findLowestCost looks for the lowest combination for furniture to build 
+     * one complete furniture. 
+     */
+    private ArrayList<Integer> findLowestCost() throws SQLException
+    {
+        ArrayList<ArrayList<Integer>> potentialCombos = filterCombos(generateAllCombos());
+        // if there are no potential combinations
+        if (potentialCombos.size() == 0)
+        {
+            return new ArrayList<Integer>(0); // return an arrayList with a size of zero
+        }
+
+        ArrayList<Integer> lowestCombo = null;
+        finalPrice = calculatePrice(potentialCombos.get(0));
+        for (ArrayList<Integer> potentialCombo : potentialCombos) {
+            int tempPrice = calculatePrice(potentialCombo);
+            System.out.println(tempPrice);
+            if (tempPrice <= finalPrice) {
+                lowestCombo = potentialCombo;
+                finalPrice = tempPrice;
+            }
+        }
+        // if(lowestCombo != null) {
+        //     System.out.println("FINAL PRICE: " + finalPrice);
+        //     System.out.println("ROWS USED:");
+        //     for (int row : lowestCombo) {
+        //         System.out.println(row + 1); //starts at 1
+        //     }
+        // } else {
+        //     System.out.println("No combinations exist");
+        // }
+
+        return lowestCombo; // return the lowest combo
+
+    }
     /**
      * printTableItem prints the table which shows the working and broken parts
      * for each furniture item in the itemTable
@@ -169,6 +376,22 @@ public class LowestCost {
         int savedRow = results.getRow();
         results.absolute(rowIndex);
         int result = results.getInt("Price");
+        results.absolute(savedRow);
+        return result;
+    }
+
+    /**
+     * get rowId gets the id of a row
+     * @param rowIndex
+     * @return
+     * @throws SQLException
+     */
+    private String getRowId(int rowIndex) throws SQLException
+    {
+        //rowIndex starts at 1
+        int savedRow = results.getRow();
+        results.absolute(rowIndex);
+        String result = results.getString("ID");
         results.absolute(savedRow);
         return result;
     }
