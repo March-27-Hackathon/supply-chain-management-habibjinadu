@@ -45,6 +45,8 @@ public class Main {
             System.out.println("Alternative Manufacturers are: " + orderResult.getManufacturerIDList().toString());
         }
 
+        
+
         //The order form should be created and used here, using orderResult to get all the needed information
     }
 
