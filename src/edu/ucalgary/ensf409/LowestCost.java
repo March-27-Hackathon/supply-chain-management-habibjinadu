@@ -607,7 +607,6 @@ public class LowestCost {
             // if there are zero or more unused parts in this column
             if (unusedPart >= 0) 
             {
-                System.out.println("Counter is: " + counter);
                 counter++; // increment the counter
             }
         }

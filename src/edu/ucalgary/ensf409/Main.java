@@ -53,8 +53,8 @@ public class Main {
 
         
 
-        //The order form should be created and used here, using orderResult to get all the needed information
-        // // Habib's Test Code
+        // //The order form should be created and used here, using orderResult to get all the needed information
+        // // // Habib's Test Code
         // FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
 
         // database.initializeConnection(); // initialize the connection
