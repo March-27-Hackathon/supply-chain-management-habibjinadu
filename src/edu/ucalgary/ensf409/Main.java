@@ -57,10 +57,10 @@ public class Main {
         }
         else {
             if (gui) {
-                graphicalUserInterfaceOutput(orderResult.getManufacturerIDList()); // THIS SHOULD BE MANUFACTURER NAMES NOT IDs !!
+                graphicalUserInterfaceOutput(orderResult.getManufacturerNameList()); // THIS SHOULD BE MANUFACTURER NAMES NOT IDs !!
             }
             else {
-                commandLineOutput(orderResult.getManufacturerIDList()); // THIS SHOULD BE MANUFACTURER NAMES NOT IDs !!
+                commandLineOutput(orderResult.getManufacturerNameList()); // THIS SHOULD BE MANUFACTURER NAMES NOT IDs !!
             }
         }
     }

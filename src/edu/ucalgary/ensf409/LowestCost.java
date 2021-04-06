@@ -73,7 +73,7 @@ public class LowestCost {
             {
                 // else get the list of manufacturers that can provide this type
                 // and store it in the order variable.
-                order.setManufacturerIDList(
+                order.setManufacturerNameList(
                             generateManufacturerNames(this.furnitureCategory));
                 
             }
