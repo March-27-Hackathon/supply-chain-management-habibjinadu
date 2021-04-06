@@ -40,6 +40,10 @@ public class Main {
         FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
         //order with all of the relevant information
 
+        // remove all of the ordered furniture in the inventory database
+        database.removeOrderFromDatabase(orderResult.getFurnitureIDList(),
+                                         orderResult.getCATEGORY());
+        
         if (orderResult.isFulfilled()) {
             if (gui) {
                 graphicalUserInterfaceOutput(orderResult.getFurnitureIDList(), orderResult.getPrice());

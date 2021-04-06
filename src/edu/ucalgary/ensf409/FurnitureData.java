@@ -1,6 +1,7 @@
 package edu.ucalgary.ensf409;
 
 import java.sql.*;
+import java.util.LinkedList;
 public class FurnitureData {
 
     public final String DBURL; //store the database url information
@@ -40,12 +41,27 @@ public class FurnitureData {
     }
 
     /**
+     * removeOrderFromDatabase removes each id specified by ids, from the table
+     * specified by category in the inventory database
+     * @param ids
+     * @param category
+     */
+    public void removeOrderFromDatabase(LinkedList<String> ids, String category)
+    {
+        // for each individual id in the list of furniture ids
+        for (String id: ids)
+        {
+            // remove the furniture from the database
+            removeFurniture(id, category); 
+        }
+    }
+    /**
      * removeFurniture removes the furniture with the specified id, from the
      * table specified by the category argument
      * @param id
      * @param category
      */
-    public void removeFurniture(String id, String category)
+    private void removeFurniture(String id, String category)
     {
         // make the query string to delete an id from the table specified by
         // category
