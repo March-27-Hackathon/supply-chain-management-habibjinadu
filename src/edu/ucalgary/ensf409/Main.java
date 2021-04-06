@@ -14,7 +14,7 @@ public class Main {
     private String type = null;
     private int quantity = Integer.MIN_VALUE;
     private final static ImageIcon icon = new ImageIcon("frankenchair.png");
-    private final static ImageIcon erroricon = new ImageIcon("frankenchairerror.png");
+    private final static ImageIcon errorIcon = new ImageIcon("frankenchairerror.png");
 
 
     public static void main(String[] args) {
