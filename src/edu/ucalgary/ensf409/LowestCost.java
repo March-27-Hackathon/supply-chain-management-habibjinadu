@@ -196,8 +196,7 @@ public class LowestCost {
     {
         // make an integer array to hold the row numbers of lowest cost order
         ArrayList<Integer> furnitureOrderList = new ArrayList<Integer>();
-        for (int items = 0; items < this.numberOfItems; items++)
-        {
+
             // find the lowest cost furniture one item in the client order
             // and assign it to lowestCombo
             ArrayList<Integer> lowestCombo = findLowestCost();
@@ -209,25 +208,7 @@ public class LowestCost {
             // add the row numbers from the lowestCombo to the furniture
             // order list
             furnitureOrderList.addAll(lowestCombo);
-            
-            // recreate the item table
-            createItemTable();
-            // find the unused parts in the current furniture order list
-            // if more parts will be found
-            ArrayList<Integer> unusedParts = 
-                                        findUnusedParts(furnitureOrderList,
-                                        items+1);
-
-           
-            // remove the furnitures in the current order as viable items in
-            // the item table
-            deactivateFurnitureInInventory(furnitureOrderList);
-            
-            // remove the columns in the item table that contain parts we 
-            // already have
-            trimItemTable(unusedParts);
-
-        }
+        
         return furnitureOrderList; // return the order list
     }
     /**
@@ -609,7 +590,7 @@ public class LowestCost {
 
     /**
      * Checks if the given furniture item combination results in a full piece of furniture, with at least one of each
-     * part intact
+     * part intact and all the required items are fulfilled.
      * @param combo The combination of furniture items
      * @return whether or not the combination creates a full piece of furniture
      */
@@ -618,7 +599,22 @@ public class LowestCost {
         for (Integer row : combo) {
             addArrays(parts, itemTable[row]);
         }
-        return containsAllTrue(parts);
+        ArrayList<Integer> unusedParts = findUnusedParts(combo, this.numberOfItems);
+        int counter = 0; // set a counter to zero
+        // for column get the amount of unused parts
+        for (Integer unusedPart:unusedParts)
+        {
+            // if there are zero or more unused parts in this column
+            if (unusedPart >= 0) 
+            {
+                System.out.println("Counter is: " + counter);
+                counter++; // increment the counter
+            }
+        }
+
+        // return true if we do the required number of parts for each item 
+        // in the order
+        return counter == this.itemTable[0].length; 
     }
 
     /**
