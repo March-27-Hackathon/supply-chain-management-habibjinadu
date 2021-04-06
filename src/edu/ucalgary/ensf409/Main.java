@@ -25,55 +25,40 @@ public class Main {
         }
         else {
             main.commandLineInput(args); // or accepts command line arguments
-        }
+        }        
 
-        // System.out.println("Category: " + main.category);
-        // System.out.println("Type: " + main.type);
-        // System.out.println("Quantity: " + String.valueOf(main.quantity));
+        //The order form should be created and used here, using orderResult to get all the needed information
+        // // Habib's Test Code
+        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
 
-        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890"));
-        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890", "C0942"));
-        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890", "C0942", "C0XXX"));
-        // LinkedList<String> furnitureIDList = new LinkedList<String>(Arrays.asList("C9890", "C0942", "C0XXX", "C0XXX"));
-        // int price = 150;
+        database.initializeConnection(); // initialize the connection
 
-        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings"));
-        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings", "Chairs R Us"));
-        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings", "Chairs R Us", "Furniture Goods"));
-        // LinkedList<String> manufacturerList = new LinkedList<String>(Arrays.asList("Office Furnishings", "Chairs R Us", "Furniture Goods", "Fine Office Supplies"));
+        Connection databaseConnection = database.getDatabaseConnection();
 
-        if (gui) {
-            // graphicalUserInterfaceOutput(furnitureIDList, price);
-            // graphicalUserInterfaceOutput(manufacturerList);
+        //Carter's test code
+        LowestCost calculation = new LowestCost(databaseConnection, main.category, main.type, main.quantity);
+        FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
+        //order with all of the relevant information
+
+        if (orderResult.isFulfilled()) {
+            if (gui) {
+                graphicalUserInterfaceOutput(orderResult.getFurnitureIDList(), orderResult.getPrice());
+            }
+            else {
+                commandLineOutput(orderResult.getFurnitureIDList(), orderResult.getPrice());
+            }
+            
+            //The order form should be created and used here, using orderResult to get all the needed information
+            OrderForm.writeOrderForm(orderResult.getTYPE(), orderResult.getCATEGORY(), orderResult.getNUMITEMS(), orderResult.getFurnitureIDList(), orderResult.getPrice());
         }
         else {
-            // commandLineOutput(furnitureIDList, price);
-            // commandLineOutput(manufacturerList);
+            if (gui) {
+                graphicalUserInterfaceOutput(orderResult.getManufacturerIDList()); // THIS SHOULD BE MANUFACTURER NAMES NOT IDs !!
+            }
+            else {
+                commandLineOutput(orderResult.getManufacturerIDList()); // THIS SHOULD BE MANUFACTURER NAMES NOT IDs !!
+            }
         }
-
-        
-
-        // //The order form should be created and used here, using orderResult to get all the needed information
-        // // // Habib's Test Code
-        // FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
-
-        // database.initializeConnection(); // initialize the connection
-
-        // Connection databaseConnection = database.getDatabaseConnection();
-
-        // //Carter's test code
-        // LowestCost calculation = new LowestCost(databaseConnection, main.category, main.type, main.quantity);
-        // FurnitureOrder orderResult = calculation.findBestCombination(); //findBestCombination will create and return an
-        // //order with all of the relevant information
-        // System.out.println("Client has ordered " + orderResult.getNUMITEMS() + " " + orderResult.getTYPE() + " " + orderResult.getCATEGORY());
-        // System.out.println("Furniture to be ordered: " + orderResult.getFurnitureIDList().toString());
-        // System.out.println("Total order price: " + orderResult.getPrice());
-        // if (!orderResult.isFulfilled())
-        // {
-        //     System.out.println("Alternative Manufacturers are: " + orderResult.getManufacturerIDList().toString());
-        // }
-
-        // //The order form should be created and used here, using orderResult to get all the needed information
     }
 
     // JOptionPane Interface
