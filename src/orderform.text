@@ -4,6 +4,7 @@ Faculty Name:
 Contact:
 Date:
 
+<<<<<<< HEAD
 Original Request: desk lamp, 2
 
 Items Ordered
@@ -12,3 +13,11 @@ ID: L342
 ID: L564
 
 Total Price: $40
+=======
+Original Request: traditional desk, 1
+
+Items Ordered
+ID: D000
+
+Total Price: $0
+>>>>>>> 8b32ebabd33abdab0d92cdded5e44b67b03ce161
