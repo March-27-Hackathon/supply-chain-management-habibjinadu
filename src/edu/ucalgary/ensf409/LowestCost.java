@@ -211,6 +211,7 @@ public class LowestCost {
         
         return furnitureOrderList; // return the order list
     }
+
     /**
      * trimItemTable trims the columns that already we already have extra parts
      * for in the current order
@@ -331,6 +332,7 @@ public class LowestCost {
 
         return unusedParts;
     }
+
     /**
      * findLowestCost looks for the lowest combination for furniture to build 
      * one complete furniture. 
@@ -367,6 +369,7 @@ public class LowestCost {
         return lowestCombo; // return the lowest combo
 
     }
+
     /**
      * printTableItem prints the table which shows the working and broken parts
      * for each furniture item in the itemTable
@@ -477,6 +480,7 @@ public class LowestCost {
         return result;
     }
 
+    /*
     public int calculateChairPrice() throws SQLException {
         ArrayList<ArrayList<String>> combinations = new ArrayList<>();
         ResultSet original = results;
@@ -507,6 +511,7 @@ public class LowestCost {
         combinations.add(newCombination);
         return 0;
     }
+     */
 
     private boolean checkNewPart(boolean[] parts, boolean[] tempParts)
     {
@@ -520,6 +525,13 @@ public class LowestCost {
 
         return false;
     }
+
+    /**
+     * Converts the Y and N characters from a row in the database to an array of true and false boolean values, where Y
+     * is converted to true and N is converted to false.
+     * @param parts An array to be filled with true/false values.
+     * @throws SQLException if results encountered a problem while trying to read values from the database.
+     */
     private void fill(boolean[] parts) throws SQLException{
         int numberOfParts = getNumberOfParts(results);
         for(int i = 3; i < numberOfParts + 3 ; i++) {
@@ -529,6 +541,12 @@ public class LowestCost {
         }
     }
 
+    /**
+     * Sets each false element in array a to true, if the same element in array b is true. In other words, it does
+     * (a element) || (b element) for each element of a.
+     * @param a The destination array
+     * @param b The source array
+     */
     private static void addArrays(boolean[] a, boolean[] b) {
         for(int i = 0; i < a.length; i++) {
             if(!a[i]) {
@@ -537,6 +555,11 @@ public class LowestCost {
         }
     }
 
+    /**
+     * Returns true if each element of src is true
+     * @param src The source array
+     * @return Whether or not each element of src is true
+     */
     private static boolean containsAllTrue(boolean[] src) {
         for(int i = 0; i < src.length; i++) {
             if(!src[i]) {
@@ -595,8 +618,9 @@ public class LowestCost {
      * @return whether or not the combination creates a full piece of furniture
      */
     private boolean isValidCombo(ArrayList<Integer> combo) {
-        boolean [] parts = new boolean[itemTable[0].length];
+        boolean [] parts = new boolean[itemTable[0].length]; //create a boolean array, filled with false
         for (Integer row : combo) {
+            //for each row, "add" the row in itemTable to the parts array
             addArrays(parts, itemTable[row]);
         }
         ArrayList<Integer> unusedParts = findUnusedParts(combo, this.numberOfItems);
@@ -624,12 +648,13 @@ public class LowestCost {
      */
     private int calculatePrice(ArrayList<Integer> combo) throws SQLException{
         int price = 0;
-        int savedIndex = results.getRow();
+        int savedIndex = results.getRow(); //saves the current index of results
         for(int rowIndex : combo) {
-            results.absolute(rowIndex+1);
-            price += results.getInt("Price");
+            results.absolute(rowIndex+1); //point results towards the row at rowIndex (the +1 is because the first
+            // resultSet row is at index 1)
+            price += results.getInt("Price"); //add the price of the row to the total price
         }
-        results.absolute(savedIndex);
+        results.absolute(savedIndex); //goes back to the saved index of results
         return price;
     }
 
@@ -641,7 +666,9 @@ public class LowestCost {
      */
     private ArrayList<ArrayList<Integer>> filterCombos(ArrayList<ArrayList<Integer>> allCombos) {
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        //creates the ArrayList to return
         for (ArrayList<Integer> current : allCombos) {
+            //calls isValidCombo for each element to determine if it should be added to result
             if (isValidCombo(current)) {
                 result.add(current);
             }
