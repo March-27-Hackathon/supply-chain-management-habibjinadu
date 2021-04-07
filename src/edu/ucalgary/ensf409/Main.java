@@ -15,8 +15,8 @@ public class Main {
     private final static String HEADER_EXT = " - Faculty FrankenFurniture Finder";
 
     // Image assets for GUI
-    private final static ImageIcon icon = new ImageIcon("frankenchair.png");
-    private final static ImageIcon errorIcon = new ImageIcon("frankenchairerror.png");
+    private final static ImageIcon ICON = new ImageIcon("frankenchair.png");
+    private final static ImageIcon ERRORICON = new ImageIcon("frankenchairerror.png");
 
     // Member variables
     private String category = null;
@@ -37,7 +37,7 @@ public class Main {
 
         //The order form should be created and used here, using orderResult to get all the needed information
         // // Habib's Test Code
-        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","carter","3nsf409*");
+        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
 
         database.initializeConnection(); // initialize the connection
 
@@ -84,18 +84,18 @@ public class Main {
     public void graphicalUserInterfaceInput() {
         try {
             String[] categories = {"Chair", "Desk", "Filing", "Lamp"}; // String array containing categories
-            this.category = (String)JOptionPane.showInputDialog(null, "I am looking for (a)...", "Category" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, categories, categories[0]);
+            this.category = (String)JOptionPane.showInputDialog(null, "I am looking for (a)...", "Category" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON, categories, categories[0]);
             if (this.category.equals("Chair")) { // Chair is selected
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of chair:", "Type (Chair)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, CHAIR_TYPES, CHAIR_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of chair:", "Type (Chair)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON, CHAIR_TYPES, CHAIR_TYPES[0]);
             }
             else if (this.category.equals("Desk")) { // Desk is selected
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of desk:", "Type (Desk)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, DESK_TYPES, DESK_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of desk:", "Type (Desk)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON, DESK_TYPES, DESK_TYPES[0]);
             }
             else if (this.category.equals("Filing")) { // Filing is selected
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of filing:", "Type (FilingO" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, FILING_TYPES, FILING_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of filing:", "Type (FilingO" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON, FILING_TYPES, FILING_TYPES[0]);
             }
             else { // Lamp is selected
-                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of lamp:", "Type (Lamp)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, LAMP_TYPES, LAMP_TYPES[0]);
+                this.type = (String)JOptionPane.showInputDialog(null, "Select a type of lamp:", "Type (Lamp)" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON, LAMP_TYPES, LAMP_TYPES[0]);
             }
         }
         catch (NullPointerException e) {
@@ -106,7 +106,7 @@ public class Main {
         }
         String quantityString = "Input";
         while (this.quantity < 1) {
-            quantityString = (String)JOptionPane.showInputDialog(null, "How many would you like?", "Quantity" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon, null, "1");
+            quantityString = (String)JOptionPane.showInputDialog(null, "How many would you like?", "Quantity" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON, null, "1");
             if (quantityString == null) {
                 System.exit(1); // Exits if user clicks "Cancel" button
             }
@@ -116,16 +116,16 @@ public class Main {
             catch (NumberFormatException e){
                 if (quantityString.length() == 0) {
                     // Error handling for no input
-                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
+                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, ERRORICON);
                 }
                 else {
                     // Error handling for invalid number
-                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
+                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, ERRORICON);
                 }
             }
             if (quantity == 0) {
                 // Error handling for input of 0
-                JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
+                JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, ERRORICON);
             }
         }
     }
@@ -149,7 +149,7 @@ public class Main {
             message = message + "and "  + furnitureIDList.get(furnitureIDList.size() - 1) + " for $" + price + ".";
         }
         // Displays message
-        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, errorIcon);
+        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ERRORICON);
     }
 
     /**
@@ -172,7 +172,7 @@ public class Main {
             message = message + "and " + manufacturerList.get(manufacturerList.size() - 1) + ".";
         }
         // Displays message
-        JOptionPane.showMessageDialog(null, message, "Item(s) Not Found" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
+        JOptionPane.showMessageDialog(null, message, "Item(s) Not Found" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, ERRORICON);
     }
 
     // Command Line Interface
