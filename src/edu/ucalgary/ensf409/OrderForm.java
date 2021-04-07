@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 public class OrderForm {
 
-
 	/**
      * Receives information and writes an order form with file name "orderform.text" in the root directory
      * @param type furniture type as a String
