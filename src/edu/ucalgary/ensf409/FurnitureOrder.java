@@ -8,7 +8,7 @@ import java.util.LinkedList;
 public class FurnitureOrder {
     private LinkedList<String> furnitureIDList; //stores IDs of all of the selected furniture items (in no particular
     //order)
-    private LinkedList<String> manufacturerIDList; //stores the IDs of suggested manufacturers, in the event that there
+    private LinkedList<String> manufacturerNameList; //stores the IDs of suggested manufacturers, in the event that there
     //isn't enough furniture in the database to fulfill the order. If there is, this field will be null.
     private int price;
     private final String CATEGORY; //eg, chair, desk, filing, lamp
@@ -18,7 +18,7 @@ public class FurnitureOrder {
 
     public FurnitureOrder(String category, String type, int numItems) {
         furnitureIDList = new LinkedList<>();
-        manufacturerIDList = null;
+        manufacturerNameList = null;
         price = 0;
         CATEGORY = category;
         TYPE = type;
@@ -30,12 +30,12 @@ public class FurnitureOrder {
         return furnitureIDList;
     }
 
-    public LinkedList<String> getManufacturerIDList() {
-        return manufacturerIDList;
+    public LinkedList<String> getManufacturerNameList() {
+        return manufacturerNameList;
     }
 
-    public void setManufacturerIDList(LinkedList<String> list) {
-        manufacturerIDList = list;
+    public void setManufacturerNameList(LinkedList<String> list) {
+        manufacturerNameList = list;
     }
 
     /**

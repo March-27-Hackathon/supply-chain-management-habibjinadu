@@ -73,7 +73,7 @@ public class LowestCost {
             {
                 // else get the list of manufacturers that can provide this type
                 // and store it in the order variable.
-                order.setManufacturerIDList(
+                order.setManufacturerNameList(
                             generateManufacturerNames(this.furnitureCategory));
                 
             }
@@ -211,6 +211,7 @@ public class LowestCost {
         
         return furnitureOrderList; // return the order list
     }
+
     /**
      * trimItemTable trims the columns that already we already have extra parts
      * for in the current order
@@ -331,6 +332,7 @@ public class LowestCost {
 
         return unusedParts;
     }
+
     /**
      * findLowestCost looks for the lowest combination for furniture to build 
      * one complete furniture. 
@@ -367,6 +369,7 @@ public class LowestCost {
         return lowestCombo; // return the lowest combo
 
     }
+
     /**
      * printTableItem prints the table which shows the working and broken parts
      * for each furniture item in the itemTable
@@ -477,6 +480,7 @@ public class LowestCost {
         return result;
     }
 
+    /*
     public int calculateChairPrice() throws SQLException {
         ArrayList<ArrayList<String>> combinations = new ArrayList<>();
         ResultSet original = results;
@@ -507,6 +511,7 @@ public class LowestCost {
         combinations.add(newCombination);
         return 0;
     }
+     */
 
     private boolean checkNewPart(boolean[] parts, boolean[] tempParts)
     {
@@ -520,6 +525,13 @@ public class LowestCost {
 
         return false;
     }
+
+    /**
+     * Converts the Y and N characters from a row in the database to an array of true and false boolean values, where Y
+     * is converted to true and N is converted to false.
+     * @param parts An array to be filled with true/false values.
+     * @throws SQLException if results encountered a problem while trying to read values from the database.
+     */
     private void fill(boolean[] parts) throws SQLException{
         int numberOfParts = getNumberOfParts(results);
         for(int i = 3; i < numberOfParts + 3 ; i++) {
@@ -529,6 +541,12 @@ public class LowestCost {
         }
     }
 
+    /**
+     * Sets each false element in array a to true, if the same element in array b is true. In other words, it does
+     * (a element) || (b element) for each element of a.
+     * @param a The destination array
+     * @param b The source array
+     */
     private static void addArrays(boolean[] a, boolean[] b) {
         for(int i = 0; i < a.length; i++) {
             if(!a[i]) {
@@ -537,6 +555,11 @@ public class LowestCost {
         }
     }
 
+    /**
+     * Returns true if each element of src is true
+     * @param src The source array
+     * @return Whether or not each element of src is true
+     */
     private static boolean containsAllTrue(boolean[] src) {
         for(int i = 0; i < src.length; i++) {
             if(!src[i]) {
@@ -589,19 +612,19 @@ public class LowestCost {
     */
 
     /**
-     * Checks if the given furniture item combination results in a full piece of furniture, with at least one of each
-     * part intact and all the required items are fulfilled.
+     * Checks if the current combination of furniture represented by combo
+     * has all the parts for the amount of items that the client has ordered
+     * 
      * @param combo The combination of furniture items
-     * @return whether or not the combination creates a full piece of furniture
+     * @return whether or not the combination has all the parts needed for 
+     * the requested amount of furniture
      */
     private boolean isValidCombo(ArrayList<Integer> combo) {
-        boolean [] parts = new boolean[itemTable[0].length];
-        for (Integer row : combo) {
-            addArrays(parts, itemTable[row]);
-        }
-        ArrayList<Integer> unusedParts = findUnusedParts(combo, this.numberOfItems);
+        // calculate the amount of unused parts in each column
+        ArrayList<Integer> unusedParts = findUnusedParts(combo,
+                                                            this.numberOfItems);
         int counter = 0; // set a counter to zero
-        // for column get the amount of unused parts
+        // for each column get the amount of unused parts
         for (Integer unusedPart:unusedParts)
         {
             // if there are zero or more unused parts in this column
@@ -611,7 +634,7 @@ public class LowestCost {
             }
         }
 
-        // return true if we do the required number of parts for each item 
+        // return true if we have the required number of parts for all items 
         // in the order
         return counter == this.itemTable[0].length; 
     }
@@ -624,12 +647,13 @@ public class LowestCost {
      */
     private int calculatePrice(ArrayList<Integer> combo) throws SQLException{
         int price = 0;
-        int savedIndex = results.getRow();
+        int savedIndex = results.getRow(); //saves the current index of results
         for(int rowIndex : combo) {
-            results.absolute(rowIndex+1);
-            price += results.getInt("Price");
+            results.absolute(rowIndex+1); //point results towards the row at rowIndex (the +1 is because the first
+            // resultSet row is at index 1)
+            price += results.getInt("Price"); //add the price of the row to the total price
         }
-        results.absolute(savedIndex);
+        results.absolute(savedIndex); //goes back to the saved index of results
         return price;
     }
 
@@ -641,7 +665,9 @@ public class LowestCost {
      */
     private ArrayList<ArrayList<Integer>> filterCombos(ArrayList<ArrayList<Integer>> allCombos) {
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+        //creates the ArrayList to return
         for (ArrayList<Integer> current : allCombos) {
+            //calls isValidCombo for each element to determine if it should be added to result
             if (isValidCombo(current)) {
                 result.add(current);
             }
