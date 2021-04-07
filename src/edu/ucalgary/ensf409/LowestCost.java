@@ -36,8 +36,11 @@ public class LowestCost {
         try {
             
             Statement stmt = dbConnect.createStatement(
+                                            // lets you move the ResultSet
+                                            // pointer
                                             ResultSet.TYPE_SCROLL_INSENSITIVE,
-                                                    ResultSet.CONCUR_UPDATABLE);
+                                            // lets you update the database
+                                            ResultSet.CONCUR_UPDATABLE);
             results = stmt.executeQuery("SELECT * FROM " +
                     furnitureCategory + " WHERE Type = '" + furnitureType +
                     "'");
@@ -52,10 +55,12 @@ public class LowestCost {
 
             //printTableItem();
 
+            // get the row numbers for the furniture that fulfills the client
+            // order
             ArrayList<Integer> furnitureOrderList = makeOrderList();
 
             
-            LinkedList<String> furnitureIds = new LinkedList<>();
+            //LinkedList<String> furnitureIds = new LinkedList<>();
 
             // for each row in the furniture orderList
             for (Integer row: furnitureOrderList)
@@ -64,7 +69,7 @@ public class LowestCost {
                 order.addID(getRowId(row.intValue()+1));
             }
             // set the price of the order
-            order.setPrice(calculatePrice(furnitureOrderList)); 
+            order.setPrice(finalPrice); 
             // if there are orders in the funiture order list
             if (!(furnitureOrderList.size() == 0))
             {
@@ -347,25 +352,26 @@ public class LowestCost {
             return new ArrayList<Integer>(0); // return an arrayList with a size of zero
         }
 
+        // initalize the lowest combo
         ArrayList<Integer> lowestCombo = null;
+        // get the price for all of the potential combo
         finalPrice = calculatePrice(potentialCombos.get(0));
-        for (ArrayList<Integer> potentialCombo : potentialCombos) {
+        // for each potential combo
+        for (ArrayList<Integer> potentialCombo : potentialCombos) 
+        {
+            // get the price for each potential combo
             int tempPrice = calculatePrice(potentialCombo);
-            System.out.println(tempPrice);
-            if (tempPrice <= finalPrice) {
+
+            //System.out.println(tempPrice);
+            // if the price for this combo is less than the current combo
+            if (tempPrice <= finalPrice) 
+            {
+                // update the lowest combo
                 lowestCombo = potentialCombo;
+                // set the final price to the price of the potential combo
                 finalPrice = tempPrice;
             }
         }
-        // if(lowestCombo != null) {
-        //     System.out.println("FINAL PRICE: " + finalPrice);
-        //     System.out.println("ROWS USED:");
-        //     for (int row : lowestCombo) {
-        //         System.out.println(row + 1); //starts at 1
-        //     }
-        // } else {
-        //     System.out.println("No combinations exist");
-        // }
 
         return lowestCombo; // return the lowest combo
 
