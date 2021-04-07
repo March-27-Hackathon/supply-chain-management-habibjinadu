@@ -149,7 +149,7 @@ public class Main {
             message = message + "and "  + furnitureIDList.get(furnitureIDList.size() - 1) + " for $" + price + ".";
         }
         // Displays message
-        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ERRORICON);
+        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, ICON);
     }
 
     /**
