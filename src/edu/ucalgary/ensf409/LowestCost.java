@@ -612,20 +612,19 @@ public class LowestCost {
     */
 
     /**
-     * Checks if the given furniture item combination results in a full piece of furniture, with at least one of each
-     * part intact and all the required items are fulfilled.
+     * Checks if the current combination of furniture represented by combo
+     * has all the parts for the amount of items that the client has ordered
+     * 
      * @param combo The combination of furniture items
-     * @return whether or not the combination creates a full piece of furniture
+     * @return whether or not the combination has all the parts needed for 
+     * the requested amount of furniture
      */
     private boolean isValidCombo(ArrayList<Integer> combo) {
-        boolean [] parts = new boolean[itemTable[0].length]; //create a boolean array, filled with false
-        for (Integer row : combo) {
-            //for each row, "add" the row in itemTable to the parts array
-            addArrays(parts, itemTable[row]);
-        }
-        ArrayList<Integer> unusedParts = findUnusedParts(combo, this.numberOfItems);
+        // calculate the amount of unused parts in each column
+        ArrayList<Integer> unusedParts = findUnusedParts(combo,
+                                                            this.numberOfItems);
         int counter = 0; // set a counter to zero
-        // for column get the amount of unused parts
+        // for each column get the amount of unused parts
         for (Integer unusedPart:unusedParts)
         {
             // if there are zero or more unused parts in this column
@@ -635,7 +634,7 @@ public class LowestCost {
             }
         }
 
-        // return true if we do the required number of parts for each item 
+        // return true if we have the required number of parts for all items 
         // in the order
         return counter == this.itemTable[0].length; 
     }
