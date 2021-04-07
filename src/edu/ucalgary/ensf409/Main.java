@@ -14,6 +14,8 @@ public class Main {
     private String type = null;
     private int quantity = Integer.MIN_VALUE;
     private final static ImageIcon icon = new ImageIcon("frankenchair.png");
+    private final static ImageIcon errorIcon = new ImageIcon("frankenchairerror.png");
+
 
     public static void main(String[] args) {
         Main main = new Main(); // instantiates Main object
@@ -100,14 +102,14 @@ public class Main {
             }
             catch (NumberFormatException e){
                 if (quantityString.length() == 0) {
-                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, icon);
+                    JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
                 }
                 else {
-                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, icon);
+                    JOptionPane.showMessageDialog(null, quantityString + " is not a valid number of items.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
                 }
             }
             if (quantity == 0) {
-                JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, icon);
+                JOptionPane.showMessageDialog(null, "At least one item must be requested.", "Error" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
             }
         }
     }
@@ -127,7 +129,7 @@ public class Main {
             }
             message = message + "and "  + furnitureIDList.get(furnitureIDList.size() - 1) + " for $" + price + ".";
         }
-        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, icon);
+        JOptionPane.showMessageDialog(null, message, "Item(s) Found" + HEADER_EXT, JOptionPane.INFORMATION_MESSAGE, errorIcon);
     }
     public static void graphicalUserInterfaceOutput(LinkedList<String> manufacturerList) {
         String message = "";
@@ -145,7 +147,7 @@ public class Main {
             }
             message = message + "and " + manufacturerList.get(manufacturerList.size() - 1) + ".";
         }
-        JOptionPane.showMessageDialog(null, message, "Item(s) Not Found" + HEADER_EXT, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, message, "Item(s) Not Found" + HEADER_EXT, JOptionPane.ERROR_MESSAGE, errorIcon);
     }
 
     // Command Line Interface
