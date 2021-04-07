@@ -103,6 +103,21 @@ public class FurnitureData {
     {
         return this.databaseConnection; // return the database connection
     }
-       
-
+    
+    /**
+     * closeConnection closes the connection to the inventory database.
+     */
+    public void closeConnection()
+    {
+        try
+        {        // close the database
+        databaseConnection.close();
+        }
+        catch (SQLException e)
+        {
+            // print a message
+            System.out.println("Could not close the database");
+            e.printStackTrace(); // print stack trace
+        }
+    }
 }

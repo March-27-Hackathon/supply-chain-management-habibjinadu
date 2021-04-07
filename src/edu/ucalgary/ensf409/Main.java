@@ -52,6 +52,9 @@ public class Main {
         database.removeOrderFromDatabase(orderResult.getFurnitureIDList(),
                                          orderResult.getCATEGORY());
         
+        // close the database
+        database.closeConnection();
+        
         if (orderResult.isFulfilled()) {
             if (gui) {
                 graphicalUserInterfaceOutput(orderResult.getFurnitureIDList(), orderResult.getPrice()); // Outputs order details to GUI
