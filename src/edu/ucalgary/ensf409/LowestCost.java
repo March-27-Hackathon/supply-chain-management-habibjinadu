@@ -77,12 +77,6 @@ public class LowestCost {
                             generateManufacturerNames(this.furnitureCategory));
                 
             }
-
-            
-            
-
-            
-            
         } catch (SQLException e) {
             System.err.println("An SQLException occurred while selecting from "
                     + furnitureCategory + " with the Type " + furnitureType);
@@ -217,6 +211,7 @@ public class LowestCost {
      * for in the current order
      * @param unusedParts
      */
+    /*
     private void trimItemTable (ArrayList<Integer> unusedParts)
     {
         // create a new array list to hold the column numbers that have extra 
@@ -237,12 +232,14 @@ public class LowestCost {
         // remove the unnecessary columns in the itemTable data member
         removeTrueColumns(columnNumbers); 
     }
+     */
     
     /**
      * removeTrueColumns removes the columns in the item table that already
      * have extra parts
      * @param columnNumbers
      */
+    /*
     private void removeTrueColumns(ArrayList<Integer> columnNumbers)
     {
         
@@ -267,6 +264,7 @@ public class LowestCost {
         // set the itemTable data member to the newItemTable
         this.itemTable = newItemTable; 
     }
+     */
 
     /**
      * deactivateFurnitureInventory modifies the itemTable data member by 
@@ -274,6 +272,7 @@ public class LowestCost {
      * the orderList
      * @param orderList
      */
+    /*
     private void deactivateFurnitureInInventory (ArrayList<Integer> orderList)
     {
         // for each row in the itemTable
@@ -287,6 +286,8 @@ public class LowestCost {
             }
         }
     }
+     */
+
     /**
      * findUnusedParts looks for any parts extra parts in the furniture order 
      * list
@@ -374,6 +375,7 @@ public class LowestCost {
      * printTableItem prints the table which shows the working and broken parts
      * for each furniture item in the itemTable
      */
+    /*
     private void printTableItem()
     {
         // for each row in the 2D array
@@ -455,6 +457,7 @@ public class LowestCost {
         return numberOfParts; // return the number of parts for the table
     }
 
+    /*
     private int getRowPrice(int rowIndex) throws SQLException{
         //rowIndex starts at 1
         int savedRow = results.getRow();
@@ -463,6 +466,7 @@ public class LowestCost {
         results.absolute(savedRow);
         return result;
     }
+     */
 
     /**
      * get rowId gets the id of a row
@@ -513,6 +517,7 @@ public class LowestCost {
     }
      */
 
+    /*
     private boolean checkNewPart(boolean[] parts, boolean[] tempParts)
     {
         for (int i = 0; i < parts.length; i++)
@@ -525,6 +530,7 @@ public class LowestCost {
 
         return false;
     }
+     */
 
     /**
      * Converts the Y and N characters from a row in the database to an array of true and false boolean values, where Y
@@ -547,6 +553,7 @@ public class LowestCost {
      * @param a The destination array
      * @param b The source array
      */
+    /*
     private static void addArrays(boolean[] a, boolean[] b) {
         for(int i = 0; i < a.length; i++) {
             if(!a[i]) {
@@ -554,12 +561,14 @@ public class LowestCost {
             }
         }
     }
+     */
 
     /**
      * Returns true if each element of src is true
      * @param src The source array
      * @return Whether or not each element of src is true
      */
+    /*
     private static boolean containsAllTrue(boolean[] src) {
         for(int i = 0; i < src.length; i++) {
             if(!src[i]) {
@@ -568,6 +577,7 @@ public class LowestCost {
         }
         return true;
     }
+     */
 
     /*
     public int calculateDeskPrice() {
