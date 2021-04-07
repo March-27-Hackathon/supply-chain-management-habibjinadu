@@ -37,7 +37,7 @@ public class Main {
 
         //The order form should be created and used here, using orderResult to get all the needed information
         // // Habib's Test Code
-        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","habib","password");
+        FurnitureData database = new FurnitureData("jdbc:mysql://localhost/inventory","carter","3nsf409*");
 
         database.initializeConnection(); // initialize the connection
 
@@ -179,7 +179,7 @@ public class Main {
 
     /**
      * Receives input via the console
-     * @param args[] command line arguments from main()
+     * @param args command line arguments from main()
      */
     public void commandLineInput(String args[]) {
         // Titlecases inputted Strings
