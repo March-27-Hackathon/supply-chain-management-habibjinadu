@@ -5,9 +5,14 @@ import java.util.LinkedList;
 
 public class OrderForm {
 
-    /**
-     Writes Order Form
-    */
+	/**
+     * Receives information and writes an order form with file name "orderform.text" in the root directory
+     * @param type furniture type as a String
+	 * @param category furniture category as a String
+	 * @param quantity number of items requested as an int
+	 * @param furnitureIDList LinkedList containing IDs of requested furniture items
+	 * @param price calculated total price as an int
+     */
 	public static void writeOrderForm(String type, String category, int quantity, LinkedList<String> furnitureIDList, int price) {
 		String fileName = "orderform.text";
 		try {
