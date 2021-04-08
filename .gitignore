@@ -1,2 +1,5 @@
 *.class
 src/edu/ucalgary/ensf409/*.class
+src/edu/ucalgary/ensf409/FurnitureOrder.class
+src/edu/ucalgary/ensf409/OrderForm.class
+src/edu/ucalgary/ensf409/Tests.class
