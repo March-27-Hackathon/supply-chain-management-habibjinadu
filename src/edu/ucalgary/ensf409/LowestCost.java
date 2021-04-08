@@ -34,7 +34,7 @@ public class LowestCost {
     public FurnitureOrder findBestCombination() {
         FurnitureOrder order = new FurnitureOrder(furnitureCategory, furnitureType, numberOfItems);
         try {
-            
+            // create a statement
             Statement stmt = dbConnect.createStatement(
                                             // lets you move the ResultSet
                                             // pointer
@@ -47,20 +47,12 @@ public class LowestCost {
 
             createItemTable(); // creates the item table
 
-            //The following just prints the query results to the screen, for testing purposes
-        /*  while(results.next()) {
-                System.out.println(results.getString("ID")+" "+results.getString("Type")+" "+results.getString("Legs")+" "+results.getString("Arms")+" "+results.getString("Seat")+" "+
-                        results.getString("Cushion")+" "+results.getInt("Price")+" "+results.getString("ManuID"));
-            } */
-
-            //printTableItem();
 
             // get the row numbers for the furniture that fulfills the client
             // order
             ArrayList<Integer> furnitureOrderList = makeOrderList();
 
             
-            //LinkedList<String> furnitureIds = new LinkedList<>();
 
             // for each row in the furniture orderList
             for (Integer row: furnitureOrderList)
@@ -82,6 +74,9 @@ public class LowestCost {
                             generateManufacturerNames(this.furnitureCategory));
                 
             }
+
+            stmt.close(); // close the statement
+            this.results.close(); // close the result set
         } catch (SQLException e) {
             System.err.println("An SQLException occurred while selecting from "
                     + furnitureCategory + " with the Type " + furnitureType);
@@ -90,11 +85,12 @@ public class LowestCost {
         return order;
     }
 
-    /**
-     * Make list string creates a formatted string using a list of ids.
-     * The formatted string is in the form ('id1', 'id2', ...)
-     * @return
-     */
+  /**
+   * Make list string creates a formatted string using a list of ids.
+    * The formatted string is in the form ('id1', 'id2', ...)
+   * @param ids linkedlist of ids to be formatted
+   * @return the formatted string in the form ('id1', 'id2', ...)
+   */
     private String makeListString(LinkedList<String> ids)
     {
         // create the string builder
@@ -116,10 +112,11 @@ public class LowestCost {
         return formattedString.toString(); // return the formatted string
     }
     /**
-     * generateManufactureNames returns a list of the manufacturer names for
-     * from the Manufacturer table 
-     * @param category
-     * @return
+     * generateManufactureNames find all manufacturers that are listed in the
+     * table specified by category, and then returns a list of the manufacturer
+     * names from that table.
+     * @param category name of the table to get manufacturers
+     * @return a list of the manufacturer names in that table
      */
     private LinkedList<String> generateManufacturerNames(String category)
     {
@@ -155,9 +152,9 @@ public class LowestCost {
 
     /**
      * generateManufacturerIDList returns a list of the different manufacturer
-     * Ids for the specific category
-     * @param category
-     * @return
+     * Ids for the table specified by category
+     * @param category name of the table
+     * @return a list of manufacturer ids from the table specified by category
      */
     private LinkedList<String> generateManufacturerIDList(String category)
     {
@@ -189,7 +186,8 @@ public class LowestCost {
     /**
      * make orderList returns an integer array list containing the lowest cost
      * furniture combinations for the client order
-     * @return
+     * @return a list of the row numbers corresponding to the rows in the 
+     * furniture table that provides the lowest cost combination
      */
     private ArrayList<Integer> makeOrderList() throws SQLException
     {
@@ -208,93 +206,19 @@ public class LowestCost {
         return lowestCombo; // return the order list
     }
 
+   
     /**
-     * trimItemTable trims the columns that already we already have extra parts
-     * for in the current order
-     * @param unusedParts
-     */
-    /*
-    private void trimItemTable (ArrayList<Integer> unusedParts)
-    {
-        // create a new array list to hold the column numbers that have extra 
-        // parts
-        ArrayList<Integer> columnNumbers = new ArrayList<Integer>();
-
-        // for each element in the unusedParts List
-        for (int i = 0; i < unusedParts.size(); i++)
-        {
-            // if the column at least 1 extra part
-            if (unusedParts.get(i).intValue() > 0)
-            {
-                // add that column to the columnNumbers array
-                columnNumbers.add(Integer.valueOf(i));
-            }
-        }
-
-        // remove the unnecessary columns in the itemTable data member
-        removeTrueColumns(columnNumbers); 
-    }
-     */
-    
-    /**
-     * removeTrueColumns removes the columns in the item table that already
-     * have extra parts
-     * @param columnNumbers
-     */
-    /*
-    private void removeTrueColumns(ArrayList<Integer> columnNumbers)
-    {
-        
-        boolean[][] newItemTable = new boolean[this.itemTable.length]
-                            [this.itemTable[0].length - columnNumbers.size()];
-        for (int i = 0; i < newItemTable.length; i++)
-        {
-            for (int j = 0, k = 0; j < this.itemTable[0].length; j++)
-            {
-                // if the current column is not part of the true columns
-                if (!columnNumbers.contains(Integer.valueOf(j)))
-                {
-                    // copy the j+offset column entry of this.itemTable
-                    // to the j column entry of newItemTable
-                    newItemTable[i][k] = this.itemTable[i][j];
-                    k++;
-                }
-
-            }
-
-        }
-        // set the itemTable data member to the newItemTable
-        this.itemTable = newItemTable; 
-    }
-     */
-
-    /**
-     * deactivateFurnitureInventory modifies the itemTable data member by 
-     * setting all the parts that are currently used for an order to false in
-     * the orderList
-     * @param orderList
-     */
-    /*
-    private void deactivateFurnitureInInventory (ArrayList<Integer> orderList)
-    {
-        // for each row in the itemTable
-        for (int row = 0; row < this.itemTable.length; row++)
-        {
-            // if this row number is current in the order list
-            if (orderList.contains(Integer.valueOf(row)))
-            {
-                // fill this row with false
-                Arrays.fill(this.itemTable[row], false);
-            }
-        }
-    }
-     */
-
-    /**
-     * findUnusedParts looks for any parts extra parts in the furniture order 
-     * list
-     * @param furnitureOrderList
-     * @return
+     * findUnusedParts finds the total amount of unused parts for a furniture
+     * combination given a required amount of parts.  
+     * @param furnitureOrderList furniture order list that contains the row
+     * numbers of the furnitures combination. 
+     * @param numberOfItems number parts that are needed for each component in
+     * a complete furniture set. For example if the client asks for 2 Lamps, 
+     * numberOfItems will be 2
+     * @return an integer array where each element contains the amount of unused
+     * in each component of a furniture. For example, if three pieces of 
+     * furniture are in furnitureOrderList and they combine to produce 2 lamps 
+     * with an extra bulb left over the returned list will be [0 1]
      */
     private ArrayList<Integer>findUnusedParts(
                                         ArrayList<Integer> furnitureOrderList,
@@ -394,15 +318,15 @@ public class LowestCost {
                 System.out.println(); // print a new line
             }
     }
+*/
 
     /**
      * createItemTable creates a 2D boolean array that is populated with 
-     * the working and broken parts for each furniture item in the ResultSet
-     * for example if a furniture item in the Result set has a Y Y N for it's 
+     * the working and broken parts for each furniture item in the ResultSet.
+     * For example if a furniture item in the Result set has a [Y Y N] for it's 
      * parts. The corresponding row in the itemTable will contain 
-     * true true false
-     * @throws SQLException if the database cannot be accessed, an SQL exception
-     * is thrown
+     * [true true false]
+     * @throws SQLException
      */
     private void createItemTable () throws SQLException
     {
@@ -426,6 +350,12 @@ public class LowestCost {
 
     }
 
+    /**
+     * get number of rows, returns the number of rows in the in the ResultSet 
+     * object
+     * @param results result set object that contains a table
+     * @return the number of rows in the result set
+     */
     private int getNumberOfRows(ResultSet results)
     {
         int lastRow = -1; // default value for the last row
@@ -444,6 +374,14 @@ public class LowestCost {
         return lastRow; // return the index of the last row
     }
 
+    /**
+     * getNumberOfParts returns the number of furniture components for a
+     * table of furniture items specified by results
+     * @param results ResultSet object pointing to a furniture category
+     * table in the inventory 
+     * database
+     * @return the number of components for all furniture items in the table
+     */
     private int getNumberOfParts (ResultSet results)
     {
         int numberOfParts = -1; // default value if the last row is not found
@@ -472,18 +410,24 @@ public class LowestCost {
      */
 
     /**
-     * get rowId gets the id of a row
-     * @param rowIndex
-     * @return
-     * @throws SQLException
+     * get rowId gets the id of a row in the ResultSet data member
+     * @param rowIndex row index of the furniture item
+     * @return the ID of the row as it is shown in the database
+     * @throws SQLException throws an SQL exception if the resultSet cannot
+     * be accessed
      */
     private String getRowId(int rowIndex) throws SQLException
     {
         //rowIndex starts at 1
+        // store the current row in the resultSet
         int savedRow = results.getRow();
+        // move the result cursor to the row specified by rowIndex
         results.absolute(rowIndex);
+        // get the id of this row and store it in result
         String result = results.getString("ID");
+        // move back to the saved row
         results.absolute(savedRow);
+        // return the ID of the furniture specified by savedRow
         return result;
     }
 

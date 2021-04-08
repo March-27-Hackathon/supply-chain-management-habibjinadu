@@ -43,8 +43,8 @@ public class FurnitureData {
     /**
      * removeOrderFromDatabase removes each id specified by ids, from the table
      * specified by category in the inventory database
-     * @param ids
-     * @param category
+     * @param ids list of ids to be removed
+     * @param category the table where the ids will be removed
      */
     public void removeOrderFromDatabase(LinkedList<String> ids, String category)
     {
@@ -58,8 +58,8 @@ public class FurnitureData {
     /**
      * removeFurniture removes the furniture with the specified id, from the
      * table specified by the category argument
-     * @param id
-     * @param category
+     * @param id id of the row to be removed
+     * @param category table where the id will be removed
      */
     private void removeFurniture(String id, String category)
     {
@@ -99,6 +99,10 @@ public class FurnitureData {
             e.printStackTrace(); // print stack trace
         }
     }
+    /**
+     * returns the Connection object that connects to the inventory database
+     * @return a Connection object that is connected to the database
+     */
     public Connection getDatabaseConnection()
     {
         return this.databaseConnection; // return the database connection
