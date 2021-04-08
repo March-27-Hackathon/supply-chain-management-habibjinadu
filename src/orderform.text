@@ -4,6 +4,7 @@ Faculty Name:
 Contact:
 Date:
 
+<<<<<<< HEAD
 Original Request: desk lamp, 3
 
 Items Ordered
@@ -14,3 +15,14 @@ ID: L342
 ID: L564
 
 Total Price: $60
+=======
+Original Request: cool logan, 1
+
+Items Ordered
+ID: L001
+ID: P010
+ID: J100
+ID: J111
+
+Total Price: $10000
+>>>>>>> 3ff5c3903d902a05a285d5a0b84f58ea7b5ec29a
