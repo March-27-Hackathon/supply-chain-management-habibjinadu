@@ -250,10 +250,12 @@ public class Main {
         else {
             // Error handling for invalid category
             System.out.println(category + " is not a valid furniture category. Please try again.");
+            System.exit(1);
         }
         if (!validType) {
             // Error handling for invalid type
             System.out.println(type + " is not a valid " + category.toLowerCase() + " type. Please try again.");
+            System.exit(1);
         }
         try {
             quantity = Integer.parseUnsignedInt(args[args.length - 1]); // parses inputted String to int
@@ -261,10 +263,12 @@ public class Main {
         catch (NumberFormatException e) {
             // Error handling for invalid number
             System.out.println(args[args.length - 1] + " is not a valid number of items. Please try again.");
+            System.exit(1);
         }
         if (quantity == 0) {
             // Error handling for input of zero
             System.out.println("At least one item must be requested. Please try again.");
+            System.exit(1);
         }
     }
 
