@@ -31,7 +31,7 @@ public class OrderForm {
 									  int quantity,
 									  LinkedList<String> furnitureIDList,
 									  int price) {
-		String fileName = "orderform.text";
+		String fileName = "orderform.txt";
 		try {
 			FileWriter fileWriter = new FileWriter(fileName, false);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
