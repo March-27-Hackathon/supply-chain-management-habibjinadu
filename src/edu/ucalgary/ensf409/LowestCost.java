@@ -5,7 +5,8 @@ import java.util.*;
 
 
 /**
- * Uses a connection to a database to calculate the lowest cost of creating a furniture item, given the desired furniture
+ * Uses a connection to a database to calculate the lowest cost of creating a
+ * furniture item, given the desired furniture
  * item and its type.
  */
 public class LowestCost {
@@ -17,7 +18,8 @@ public class LowestCost {
     private int finalPrice;
     private boolean[][] itemTable;
 
-    public LowestCost(Connection dbConnect, String category, String fType, int numItems) {
+    public LowestCost(Connection dbConnect, String category, String fType,
+                      int numItems) {
         this.dbConnect = dbConnect;
         this.furnitureCategory = category;
         this.furnitureType = fType;
@@ -25,14 +27,18 @@ public class LowestCost {
     }
 
     /**
-     * This method will use the database connection, the furniture category and type, and the number of items to be
-     * ordered to determine the most cost-efficient combination of furniture items to use from the database. Once it
-     * does, it will update the database to remove the furniture items it's using, and will also create and return a
-     * FurnitureOrder object consisting of all of the relevant data for the order.
-     * @return The FurnitureOrder object, which contains all data relevant to the furniture order.
+     * This method will use the database connection, the furniture category and
+     * type, and the number of items to be ordered to determine the most
+     * cost-efficient combination of furniture items to use from the database.
+     * Once it does, it will update the database to remove the furniture items
+     * it's using, and will also create and return a FurnitureOrder object
+     * consisting of all of the relevant data for the order.
+     * @return The FurnitureOrder object, which contains all data relevant to
+     * the furniture order.
      */
     public FurnitureOrder findBestCombination() {
-        FurnitureOrder order = new FurnitureOrder(furnitureCategory, furnitureType, numberOfItems);
+        FurnitureOrder order = new FurnitureOrder(furnitureCategory,
+                furnitureType, numberOfItems);
         try {
             // create a statement
             Statement stmt = dbConnect.createStatement(
@@ -129,7 +135,8 @@ public class LowestCost {
         // make the list of IDs
         String listOfIds = makeListString(manufacturerIds);
         // make the queryString
-        String query = "SELECT * FROM manufacturer WHERE ManuID IN " + listOfIds;
+        String query = "SELECT * FROM manufacturer WHERE ManuID IN "
+                + listOfIds;
         // make the statement and the query database
         try (Statement queryStatement = this.dbConnect.createStatement();
             ResultSet queryResult = queryStatement.executeQuery(query))
@@ -199,7 +206,8 @@ public class LowestCost {
         // if the lowestCombo array list is empty
         if (lowestCombo.size() == 0)
         {
-            return new ArrayList<Integer>(0); // return an empty arrayList
+            return new ArrayList<Integer>(0); // return an empty
+            // arrayList
         }
 
         
@@ -266,11 +274,13 @@ public class LowestCost {
      */
     private ArrayList<Integer> findLowestCost() throws SQLException
     {
-        ArrayList<ArrayList<Integer>> potentialCombos = filterCombos(generateAllCombos());
+        ArrayList<ArrayList<Integer>> potentialCombos =
+                filterCombos(generateAllCombos());
         // if there are no potential combinations
         if (potentialCombos.size() == 0)
         {
-            return new ArrayList<Integer>(0); // return an arrayList with a size of zero
+            return new ArrayList<Integer>(0); // return an arrayList
+            // with a size of zero
         }
 
         // initalize the lowest combo
@@ -480,10 +490,12 @@ public class LowestCost {
      */
 
     /**
-     * Converts the Y and N characters from a row in the database to an array of true and false boolean values, where Y
-     * is converted to true and N is converted to false.
+     * Converts the Y and N characters from a row in the database to an array of
+     * true and false boolean values, where Y is converted to true and N is
+     * converted to false.
      * @param parts An array to be filled with true/false values.
-     * @throws SQLException if results encountered a problem while trying to read values from the database.
+     * @throws SQLException if results encountered a problem while trying to
+     * read values from the database.
      */
     private void fill(boolean[] parts) throws SQLException{
         int numberOfParts = getNumberOfParts(results);
@@ -495,7 +507,8 @@ public class LowestCost {
     }
 
     /**
-     * Sets each false element in array a to true, if the same element in array b is true. In other words, it does
+     * Sets each false element in array a to true, if the same element in array
+     * b is true. In other words, it does
      * (a element) || (b element) for each element of a.
      * @param a The destination array
      * @param b The source array
@@ -538,7 +551,8 @@ public class LowestCost {
     private int lampPrice() throws SQLException{
         return calculateLampPrice(itemTable[0], itemTable, 1);
     }
-    private int calculateLampPrice(boolean[] foundParts, boolean[][] parts, int currentRow) throws SQLException{
+    private int calculateLampPrice(boolean[] foundParts, boolean[][] parts,
+                                   int currentRow) throws SQLException{
         if(containsAllTrue(foundParts)) {
             return getRowPrice(currentRow);
             //combination found
@@ -558,15 +572,20 @@ public class LowestCost {
                 //failure
             }
         }
-        //if there are new parts to be added, the price should include the current row
+        //if there are new parts to be added, the price should include the
+        //current row
         if(checkNewPart(foundParts, parts[0])) {
             addArrays(foundParts, parts[0]);
-            return getRowPrice(currentRow) + calculateLampPrice(foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+            return getRowPrice(currentRow)
+            + calculateLampPrice(foundParts,
+                                Arrays.copyOfRange(parts,
+                                 1, parts.length), currentRow+1);
         }
         //otherwise it should not include the current row
-        return calculateLampPrice(foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+        return calculateLampPrice(foundParts, Arrays.copyOfRange(parts, 1,
+        parts.length), currentRow+1);
     }
-    */
+     */
 
     /**
      * Checks if the current combination of furniture represented by combo
@@ -600,31 +619,36 @@ public class LowestCost {
      * Uses the resultSet to get the price of a combination of furniture items
      * @param combo A combination of furniture items
      * @return The price of all furniture items in the combination
-     * @throws SQLException if the resultSet is unable to get the price of one of the rows
+     * @throws SQLException if the resultSet is unable to get the price of one
+     * of the rows
      */
     private int calculatePrice(ArrayList<Integer> combo) throws SQLException{
         int price = 0;
         int savedIndex = results.getRow(); //saves the current index of results
         for(int rowIndex : combo) {
-            results.absolute(rowIndex+1); //point results towards the row at rowIndex (the +1 is because the first
+            results.absolute(rowIndex+1); //point results towards the row at
+            // rowIndex (the +1 is because the first
             // resultSet row is at index 1)
-            price += results.getInt("Price"); //add the price of the row to the total price
+            price += results.getInt("Price"); //add the price of the row to
+            // the total price
         }
         results.absolute(savedIndex); //goes back to the saved index of results
         return price;
     }
 
     /**
-     * Receives a list of combinations of furniture items, and returns a list that only contains combinations where all
-     * parts are found
+     * Receives a list of combinations of furniture items, and returns a list
+     * that only contains combinations where all parts are found
      * @param allCombos A list of any combination of furniture items
      * @return A list of combinations of furniture items containing all parts
      */
-    private ArrayList<ArrayList<Integer>> filterCombos(ArrayList<ArrayList<Integer>> allCombos) {
+    private ArrayList<ArrayList<Integer>> filterCombos(
+            ArrayList<ArrayList<Integer>> allCombos) {
         ArrayList<ArrayList<Integer>> result = new ArrayList<>();
         //creates the ArrayList to return
         for (ArrayList<Integer> current : allCombos) {
-            //calls isValidCombo for each element to determine if it should be added to result
+            // calls isValidCombo for each element to determine if it should be
+            // added to result
             if (isValidCombo(current)) {
                 result.add(current);
             }
@@ -633,19 +657,24 @@ public class LowestCost {
     }
 
     /**
-     * This method generates all possible combinations of itemTable rows (corresponding to a furniture item in the
-     * database). It picks each row using its itemTable index. For example, the first index will be 0, the next will be
-     * 1, etc. Each element in the returned ArrayList is itself an ArrayList, containing all of the indexes of the rows
-     * used. After calling this function, the calculation method should determine which of the combinations result in
-     * furniture items that have at least one of each functional part.
-     * @return A list that contains all possible combinations of furniture items.
+     * This method generates all possible combinations of itemTable rows
+     * (corresponding to a furniture item in the database). It picks each row
+     * using its itemTable index. For example, the first index will be 0, the
+     * next will be 1, etc. Each element in the returned ArrayList is itself an
+     * ArrayList, containing all of the indexes of the rows used. After calling
+     * this function, the calculation method should determine which of the
+     * combinations result in furniture items that have at least one of each
+     * functional part.
+     * @return A list that contains all possible combinations of furniture
+     * items.
      */
     private ArrayList<ArrayList<Integer>> generateAllCombos() {
         ArrayList<ArrayList<Integer>> list = new ArrayList<>();
         //total array length is 2^itemTable.length
         for(int i = 0; i < Math.pow(2, itemTable.length); i++) {
-            //this next part uses the binary representation of i to translate i to a combination of choices whether or
-            //not to include each row of itemTable in the combination
+            //this next part uses the binary representation of i to translate i
+            //to a combination of choices whether or not to include each row of
+            //itemTable in the combination
             String s = Integer.toBinaryString(i);
             //pad s with zeros
             StringBuilder newStr = new StringBuilder();
@@ -655,16 +684,19 @@ public class LowestCost {
                 }
             }
             newStr.append(s);
-            //newS is now a String that contains i in a binary representation, padded with zeros to achieve a length of
-            //itemTable.length
+            // newS is now a String that contains i in a binary representation,
+            // padded with zeros to achieve a length of
+            // itemTable.length
             ArrayList<Integer> combination = new ArrayList<>();
             for(int j = 0; j < itemTable.length; j++) {
                 if(newStr.charAt(j) == '1') {
-                    //include the row of itemTable with index j as part of the combination
+                    //include the row of itemTable with index j as part of the
+                    // combination
                     combination.add(j);
                 }
             }
-            list.add(combination); //add this combination of itemTable rows to the list of all combinations
+            list.add(combination); //add this combination of itemTable rows to
+            // the list of all combinations
         }
         return list;
     }
