@@ -12,11 +12,11 @@
  */
 
  /*
-To run the program, you need to:
+TO RUN THE PROGRAM, YOU NEED TO:
 1) Open your command line terminal
 2) Navigate to the Group_33 folder on the terminal
-3) Compile the program by typing 'javac edu/ucalgary/ensf409/Main.java'
-4) Run the program by typing 'java edu/ucalgary/ensf409/Main'
+3) Compile the program by typing 'javac -cp .;lib/mysql-connector-java-8.0.23.jar;. edu/ucalgary/ensf409/Main.java'
+4) Run the program by typing 'java -cp .;lib/mysql-connector-java-8.0.23.jar;. edu/ucalgary/ensf409/Main'
 5) A GUI will pop up, and you can select your order
 6) If you select an order that can be fulfilled, an orderform.text file will be 
 created in the Group_33 folder
