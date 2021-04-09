@@ -105,7 +105,8 @@ public class FurnitureData {
      */
     public Connection getDatabaseConnection()
     {
-        return this.databaseConnection; // return the database connection
+        return this.databaseConnection;
+        // return the database connection
     }
     
     /**
