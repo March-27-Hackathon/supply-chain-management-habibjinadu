@@ -1,7 +1,23 @@
+/**
+ * @author Habib Jinadu <a href = "mailto:habib.jinadu@ucalgary.ca">
+ * habib.jinadu@ucalgary.ca</a>
+ * @author Cheyenne Goh <a href = "cheyenne.goh1@ucalgary.ca">
+ * cheyenne.goh1@ucalgary.ca</a>
+ * @author Carter Fuchs <a href = "mailto:carter.fuchs@ucalgary.ca">
+ * carter.fuchs@ucalgary.ca</a>
+ * @author Logan Jones  <a href = "mailto:logan.jones1@ucalgary.ca">
+ * logan.jones1@ucalgary.ca</a>
+ * @version     1.8
+ * @since       1.0
+ */
 package edu.ucalgary.ensf409;
 
 import java.sql.*;
 import java.util.LinkedList;
+/**
+ * The purpose of this class is to manage the connection with the database.
+ * This class also removed items from the database when requested.
+ */
 public class FurnitureData {
 
     public final String DBURL; //store the database url information

@@ -1,3 +1,28 @@
+/**
+ * @author Habib Jinadu <a href = "mailto:habib.jinadu@ucalgary.ca">
+ * habib.jinadu@ucalgary.ca</a>
+ * @author Cheyenne Goh <a href = "cheyenne.goh1@ucalgary.ca">
+ * cheyenne.goh1@ucalgary.ca</a>
+ * @author Carter Fuchs <a href = "mailto:carter.fuchs@ucalgary.ca">
+ * carter.fuchs@ucalgary.ca</a>
+ * @author Logan Jones  <a href = "mailto:logan.jones1@ucalgary.ca">
+ * logan.jones1@ucalgary.ca</a>
+ * @version     1.8
+ * @since       1.0
+ */
+
+ /*
+To run the program, you need to:
+1) Open your command line terminal
+2) Navigate to the Group_33 folder on the terminal
+3) Compile the program by typing 'javac edu/ucalgary/ensf409/Main.java'
+4) Run the program by typing 'java edu/ucalgary/ensf409/Main'
+5) A GUI will pop up, and you can select your order
+6) If you select an order that can be fulfilled, an orderform.text file will be 
+created in the Group_33 folder
+7) Open the orderform.text file to view your order
+
+  */
 package edu.ucalgary.ensf409;
 import java.sql.*;
 import java.util.Arrays;
