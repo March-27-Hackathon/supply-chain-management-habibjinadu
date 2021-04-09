@@ -14,7 +14,7 @@
  /*
 TO RUN THE PROGRAM, YOU NEED TO:
 1) Open your command line terminal
-2) Navigate to the Group_33 folder on the terminal
+2) Navigate to the \Group_33 directory on the terminal
 3) Compile the program by typing 'javac -cp .;lib/mysql-connector-java-8.0.23.jar;. edu/ucalgary/ensf409/Main.java'
 4) Run the program by typing 'java -cp .;lib/mysql-connector-java-8.0.23.jar;. edu/ucalgary/ensf409/Main'
 5) A GUI will pop up, and you can select your order
@@ -68,7 +68,7 @@ public class Main {
         // get all the needed information
         // // Habib's Test Code
         FurnitureData database = new FurnitureData(
-                "jdbc:mysql://localhost/inventory","carter","3nsf409*");
+                "jdbc:mysql://localhost/inventory","scm","ensf409");
 
         database.initializeConnection(); // initialize the connection
 
