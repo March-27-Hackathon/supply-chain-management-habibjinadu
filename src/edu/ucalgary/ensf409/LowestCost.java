@@ -582,7 +582,8 @@ public class LowestCost {
                                  1, parts.length), currentRow+1);
         }
         //otherwise it should not include the current row
-        return calculateLampPrice(foundParts, Arrays.copyOfRange(parts, 1, parts.length), currentRow+1);
+        return calculateLampPrice(foundParts, Arrays.copyOfRange(parts, 1,
+        parts.length), currentRow+1);
     }
      */
 
