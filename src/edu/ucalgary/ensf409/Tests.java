@@ -1,6 +1,6 @@
 /**
-@author Logan Jones <a href="mailto:logan.jones1@ucalgary.ca">
-	Logan.Jones1@ucalgary.ca</a>
+@author Logan Jones <a href = "mailto:logan.jones1@ucalgary.ca">
+Logan.Jones1@ucalgary.ca</a>
 @version	1.9
 @since		1.0
  */
@@ -30,6 +30,34 @@ public class Tests {
 			System.out.println("Cannot connect to the database");
             e.printStackTrace();
             System.exit(1);
+		}
+	}
+	
+	public static void addDeskToDatabase(String id, String type, String legs, String top,
+			String drawer, int price, String manuID) {
+		/*
+		 * Adds a desk into the test database for the purpose of replacing desks removed
+		 * from the database from test function(s) below.
+		 */
+		try {
+			String query = "INSERT INTO desk (ID, Type, Legs, Top, Drawer, Price, ManuID)"
+				+ " VALUES (?,?,?,?,?,?,?)";
+			PreparedStatement myStmt = dbConnection.prepareStatement(query);
+		
+			myStmt.setString(1, id);
+			myStmt.setString(2, type);
+			myStmt.setString(3, legs);
+			myStmt.setString(4, top);
+			myStmt.setString(5, drawer);
+			myStmt.setInt(6, price);
+			myStmt.setString(7, manuID);
+		
+			myStmt.executeUpdate();
+			myStmt.close();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			System.out.println("Error: Could not add desk to database.");
+			System.exit(1);
 		}
 	}
 	
@@ -85,6 +113,36 @@ public class Tests {
 	}
 	
 	@Test
+	public void testFindBestCombinationTwoTraditinalDeskParts() {
+		/*
+		 * Tests if an order was placed for two traditional desks that it would
+		 * produce the proper list of items that require to fulfill the order.
+		 * This is found by inspection of the test database.
+		 */
+		Tests.initializeConnection();
+		
+		LinkedList<String> testIDList = new LinkedList<>();
+		// Make a list of expected items to be oredered for one mesh chair.
+		testIDList.add("D4231");
+		testIDList.add("D8675");
+		testIDList.add("D9352");
+		
+		LowestCost test = new LowestCost(Tests.dbConnection, "Desk", "Traditional", 2);
+		// Make a LowestCost object and then run the findBestComibination() method.
+		FurnitureOrder testResult = test.findBestCombination();
+		
+		boolean idListsSame = false;
+		// Check if the furnitureIDList in FurnitureOrder testResult is the same as
+		// testIDList. If so, set boolean idListsSame to true.
+		if(testIDList.equals(testResult.getFurnitureIDList()))
+			idListsSame = true;
+		
+		assertEquals("Failure on LowestCost item list with 2 traditional desks", true, idListsSame);
+		// boolean idListsSame should be true if the FurnitureOrder testResults' furnitureIDList
+		// is the same as the testIDList. If not this test will fail.
+	}
+	
+	@Test
 	public void testFindBestCombinationMeshChairParts() {
 		/*
 		 * Tests if an order was placed for one mesh chair that it would produce the 
@@ -111,6 +169,35 @@ public class Tests {
 		assertEquals("Failure on LowestCost item list with 1 mesh chair", true, idListsSame);
 		// boolean idListsSame should be true if the FurnitureOrder testResults' furnitureIDList
 		// is the same as the testIDList. If not this test will fail.
+	}	
+		
+	@Test
+	public void testFindBestCombinationKneelingChairParts() {
+		/*
+		 * Tests if an order was placed for one kneeling chair that it would
+		 * produce the proper list of items that require to fulfill the order.
+		 * This is found by inspection of the test database.
+		 */
+		Tests.initializeConnection();
+		
+		LinkedList<String> testIDList = new LinkedList<>();
+		// Make a list of expected items to be oredered for one mesh chair.
+		// Add no elements because expecting the order not be able to be
+		// fulfilled.
+		
+		LowestCost test = new LowestCost(Tests.dbConnection, "Chair", "Kneeling", 1);
+		// Make a LowestCost object and then run the findBestComibination() method.
+		FurnitureOrder testResult = test.findBestCombination();
+			
+		boolean idListsSame = false;
+		// Check if the furnitureIDList in FurnitureOrder testResult is the same as
+		// testIDList. If so, set boolean idListsSame to true.
+		if(testIDList.equals(testResult.getFurnitureIDList()))
+			idListsSame = true;
+		
+		assertEquals("Failure on LowestCost item list with 1 kneeling chair", true, idListsSame);
+		// boolean idListsSame should be true if the FurnitureOrder testResults' furnitureIDList
+		// is the same as the testIDList. If not this test will fail.
 	}
 	
 	@Test
@@ -134,7 +221,7 @@ public class Tests {
 		// Open the recently created orderform.text and the test case .text file:
 		// testOrderForm.text.
 		try {
-			FileReader file = new FileReader("orderform.text");
+			FileReader file = new FileReader("orderform.txt");
 			FileReader testFile = new FileReader("testOrderForm.text");
 			
 			BufferedReader bFile = new BufferedReader(file);
@@ -165,11 +252,111 @@ public class Tests {
 		// expected layout. If not this test will fail.
 	}
 	
+	@Test
+	public void testItemsRemovedFromDatabaseTwoTraditionalDesks() {
+		/*
+		 * Tests that when an order for two traditional desks is fullfiled that the
+		 * items used for the order is removed from the database.
+		 */
+		FurnitureData testDatabase = new FurnitureData("jdbc:mysql://localhost/inventory","Jones","ensf409");
+		// Asstablish proper connections to the test database.
+		testDatabase.initializeConnection();
+		Tests.initializeConnection();
+		
+		LowestCost test = new LowestCost(Tests.dbConnection, "Desk", "Traditional", 2);
+		// Make a LowestCost object and then run the findBestComibination() method.
+		FurnitureOrder testResult = test.findBestCombination();
+		
+		// Reomove the items included from the order.
+		testDatabase.removeOrderFromDatabase(testResult.getFurnitureIDList(), testResult.getCATEGORY());
+		
+		// Make an order for two traditional desks again knowing that there is not enough
+		// items in the test database anymore to fulfill the order. This order should not
+		// succeed in producing a price other than 0.
+		test = new LowestCost(Tests.dbConnection, "Desk", "Traditional", 2);
+		testResult = test.findBestCombination();
+		
+		// Replace the items into the test database so that the database returns to it's
+		// original state before Tests.java is run.
+		Tests.addDeskToDatabase("D4231", "Traditional", "N", "Y", "Y", 50, "005");
+		Tests.addDeskToDatabase("D8675", "Traditional", "Y", "Y", "N", 75, "001");
+		Tests.addDeskToDatabase("D9352", "Traditional", "Y", "N", "Y", 75, "002");
+		
+		assertEquals("Failure on RemovingOrderFromDatabase with 2 traditional desks", 0, testResult.getPrice());
+		// testResults.getPrice() should return 0 since the second order for two traditional
+		// desks do not have enough items in the database to fullfill be fullfilled.
+		// The order for two traditional desks have been proven to be successful in returning
+		// the right price and parts in earlier test functions.
+	}
 	
+	@Test
+	public void testManufacturerNameListKneelingChair() {
+		/*
+		 * Tests that when an order is placed for one kneeling chair it would 
+		 * produce the proper list of manufaturers that would be recommended
+		 * if the order can not be fulfilled. 
+		 */
+		Tests.initializeConnection();
+		
+		LinkedList<String> testManufacturerList = new LinkedList<>();
+		// Make a list of expected manufaturers to be recommended for the mesh chair.
+		testManufacturerList.add("Office Furnishings");
+		testManufacturerList.add("Chairs R Us");
+		testManufacturerList.add("Furniture Goods");
+		testManufacturerList.add("Fine Office Supplies");
+		
+		LowestCost test = new LowestCost(Tests.dbConnection, "Chair", "Kneeling", 1);
+		// Make a LowestCost object and then run the findBestComibination() method.
+		// Since the order can't be fulfilled it should produce a manufacturer list
+		// within the FurnitureOrder testResult object.
+		FurnitureOrder testResult = test.findBestCombination();
+			
+		boolean manuListsSame = false;
+		// Check if the manufacturerNameList in FurnitureOrder testResult is the same as
+		// testManufacturerList. If so, set boolean idListsSame to true.
+		if(testManufacturerList.equals(testResult.getManufacturerNameList()))
+			manuListsSame = true;
+		
+		assertEquals("Failure on LowestCost manufacturer list with 1 kneeling chair", true, manuListsSame);
+		// boolean manuListsSame should be true if the FurnitureOrder testResults' 
+		// manufacturerNameList is the same as the testManufacturerList. If not,
+		// this test will fail.
+	}
 	
-	
-	
-	
+	@Test
+	public void testManufacturerNameListMeshChair() {
+		/*
+		 * Tests that when an order is placed for one mesh chair it would 
+		 * produce the proper list of manufaturers that would be recommended
+		 * if the order can not be fulfilled. 
+		 */
+		Tests.initializeConnection();
+		
+		LinkedList<String> testManufacturerList = null;
+		// Make a list of expected manufaturers to be recommended for the one
+		// mesh chair.
+		
+		// Make the list null since that should be the state of the 
+		// manufacturerNameList in the following FurnatureOrder testResult
+		// object if the order is fulfilled.
+		
+		LowestCost test = new LowestCost(Tests.dbConnection, "Chair", "Mesh", 1);
+		// Make a LowestCost object and then run the findBestComibination() method.
+		// Since the order can be fulfilled it should not produce a manufacturer list
+		// within the FurnitureOrder testResult object.
+		FurnitureOrder testResult = test.findBestCombination();
+			
+		boolean manuListsSame = false;
+		// Check if the manufacturerNameList in FurnitureOrder testResult is the same as
+		// testManufacturerList. If so, set boolean idListsSame to true.
+		if(testManufacturerList == testResult.getManufacturerNameList())
+			manuListsSame = true;
+		
+		assertEquals("Failure on LowestCost manufacturer list with 1 mesh chair", true, manuListsSame);
+		// boolean manuListsSame should be true if the FurnitureOrder testResults' 
+		// manufacturerNameList is the same as the testManufacturerList. If not,
+		// this test will fail.
+	}
 	
 	
 	
