@@ -1,6 +1,6 @@
 /**
 @author Logan Jones <a href = "mailto:logan.jones1@ucalgary.ca">
-Logan.Jones1@ucalgary.ca</a>
+logan.jones1@ucalgary.ca</a>
 @version	1.9
 @since		1.0
  */

@@ -1,7 +1,7 @@
 /**
  * @author Habib Jinadu <a href = "mailto:habib.jinadu@ucalgary.ca">
  * habib.jinadu@ucalgary.ca</a>
- * @author Cheyenne Goh <a href = "cheyenne.goh1@ucalgary.ca">
+ * @author Cheyenne Goh <a href = "mailto:cheyenne.goh1@ucalgary.ca">
  * cheyenne.goh1@ucalgary.ca</a>
  * @author Carter Fuchs <a href = "mailto:carter.fuchs@ucalgary.ca">
  * carter.fuchs@ucalgary.ca</a>
