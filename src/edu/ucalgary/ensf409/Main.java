@@ -68,7 +68,7 @@ public class Main {
         // get all the needed information
         // // Habib's Test Code
         FurnitureData database = new FurnitureData(
-                "jdbc:mysql://localhost/inventory","Jones","ensf409");
+                "jdbc:mysql://localhost/inventory","scm","ensf409");
 
         database.initializeConnection(); // initialize the connection
 
