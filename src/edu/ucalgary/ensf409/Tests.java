@@ -1,8 +1,14 @@
 /**
-@author Logan Jones <a href = "mailto:logan.jones1@ucalgary.ca">
-logan.jones1@ucalgary.ca</a>
-@version	1.9
-@since		1.0
+ * @author Habib Jinadu <a href = "mailto:habib.jinadu@ucalgary.ca">
+ * habib.jinadu@ucalgary.ca</a>
+ * @author Cheyenne Goh <a href = "mailto:cheyenne.goh1@ucalgary.ca">
+ * cheyenne.goh1@ucalgary.ca</a>
+ * @author Carter Fuchs <a href = "mailto:carter.fuchs@ucalgary.ca">
+ * carter.fuchs@ucalgary.ca</a>
+ * @author Logan Jones  <a href = "mailto:logan.jones1@ucalgary.ca">
+ * logan.jones1@ucalgary.ca</a>
+ * @version     1.9
+ * @since       1.0
  */
 
 package edu.ucalgary.ensf409;
